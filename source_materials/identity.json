@@ -13,10 +13,11 @@
   "preferences": {
     "language": "en",
     "resume_style": "modern_builder",
+    "template": "default",
     "tone": "professional",
     "include_photo": false,
     "date_format": "YYYY-MM",
-    "notes": "Set resume_style to: modern_builder, traditional, academic, or creative"
+    "notes": "template options: default, minimal, creative, executive. resume_style: modern_builder, traditional, academic, creative"
   },
 
   "narrative_hooks": {

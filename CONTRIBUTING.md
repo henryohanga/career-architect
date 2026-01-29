@@ -75,7 +75,7 @@ Good first issues are labeled `good first issue`. Areas where help is needed:
 
 ```bash
 # Fork and clone the repository
-git clone https://github.com/YOUR_USERNAME/career-architect.git
+git clone https://github.com/henryohanga/career-architect.git
 cd career-architect
 
 # Create a virtual environment

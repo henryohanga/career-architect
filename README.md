@@ -107,7 +107,7 @@ source_materials/projects/
 
 Now tell your AI assistant:
 
-> "Read `.prompts/setup.md` and analyze my resumes in `source_materials/resumes/` and projects in `source_materials/projects/` to build my master experience file."
+> "Read `.prompts/core/setup.md` and analyze my resumes in `source_materials/resumes/` and projects in `source_materials/projects/` to build my master experience file."
 
 The AI will extract and structure all your achievements into `source_materials/master_experience.md`.
 
@@ -226,18 +226,43 @@ make test                    # Run tests
 career-architect/
 ├── .prompts/                    # AI instruction prompts
 │   ├── main_orchestrator.md     # Pipeline controller
-│   ├── setup.md                 # Experience extraction
-│   ├── analyser.md              # Gap analysis + strategic match report
-│   ├── tailor_resume.md         # Resume generation
-│   ├── cover_letter.md          # Cover letter generation
-│   ├── application_questions.md # Extra questions
-│   ├── interview_prep.md        # Interview coaching + mock interviews
+│   ├── core/                    # Shared prompts (all role types)
+│   │   ├── role_detector.md     # Auto-classifies job type from JD
+│   │   ├── power_language.md    # A+++ screening language + ATS optimization
+│   │   ├── quality_gates.md     # Self-checks + self-correction gates
+│   │   ├── setup.md             # Experience extraction
+│   │   ├── cover_letter.md      # Cover letter generation
+│   │   ├── follow_up.md         # Professional follow-up emails
+│   │   ├── pdf_generator.md     # Build preparation
+│   │   └── application_questions.md
+│   ├── engineering/             # Technical/Engineering roles
+│   │   ├── manifesto_logic.md   # Modern Builder philosophy
+│   │   ├── analyser.md          # Technical gap analysis
+│   │   ├── tailor_resume.md     # Engineering resume
+│   │   └── interview_prep.md    # Technical interviews
+│   ├── business/                # Non-technical roles (Sales, Marketing, etc.)
+│   │   ├── business_capabilities.md  # Business Impact framework
+│   │   ├── analyser.md          # Business gap analysis
+│   │   ├── tailor_resume.md     # Business resume
+│   │   └── interview_prep.md    # Business interviews
+│   ├── creative/                # Creative roles (Design, Writing, Brand)
+│   │   ├── creative_capabilities.md  # Creative Portfolio framework
+│   │   ├── analyser.md          # Creative gap analysis
+│   │   ├── tailor_resume.md     # Creative resume
+│   │   └── interview_prep.md    # Portfolio interviews
+│   ├── healthcare/              # Healthcare roles
+│   │   ├── clinical_outcomes.md # Clinical Outcomes framework
+│   │   ├── analyser.md          # Healthcare gap analysis
+│   │   ├── tailor_resume.md     # Healthcare resume
+│   │   └── interview_prep.md    # Clinical interviews
+│   ├── academic/                # Academic roles
+│   │   ├── academic_research.md # Academic Research framework
+│   │   ├── analyser.md          # Academic gap analysis
+│   │   ├── tailor_resume.md     # Academic CV/resume
+│   │   └── interview_prep.md    # Research interviews
+│   ├── style_guide.md           # Resume styles & language config
 │   ├── gap_filler.md            # Fill experience gaps
 │   ├── linkedin_optimizer.md    # LinkedIn profile optimization
-│   ├── follow_up.md             # Professional follow-up emails
-│   ├── style_guide.md           # Resume styles & language config
-│   ├── pdf_generator.md         # Build preparation
-│   ├── manifesto_logic.md       # Modern Builder philosophy
 │   └── career_architect.md      # Core directives
 ├── applications/                # Generated job applications
 │   └── YYYY-MM-DD-company-role/
@@ -285,6 +310,8 @@ career-architect/
 | `setup.md`                 | Extract and structure experience into master file       |
 | `analyser.md`              | Gap analysis + strategic match report                   |
 | `tailor_resume.md`         | Generate targeted resume (style-configurable)           |
+| `power_language.md`        | A+++ screening language and domain-specific vocabulary  |
+| `quality_gates.md`         | Self-check + self-correction gates (PASS/FAIL)          |
 | `cover_letter.md`          | Generate compelling cover letters                       |
 | `application_questions.md` | Answer application questions with SAR framework         |
 | `interview_prep.md`        | Generate questions + mock interview coaching            |
@@ -296,9 +323,25 @@ career-architect/
 | `manifesto_logic.md`       | Modern Builder philosophy and language                  |
 | `career_architect.md`      | Core operational directives                             |
 
-## The Modern Builder Framework
+## Multi-Profile Support
 
-This system uses the "Modern Builder" framework to present engineering experience:
+Career Architect supports **multiple career types** with role-specific capability frameworks. The pipeline auto-detects the role category from the job description and routes to the appropriate prompts.
+
+### Supported Role Categories
+
+| Category      | Example Roles                                              | Framework          |
+| ------------- | ---------------------------------------------------------- | ------------------ |
+| `engineering` | Software Engineer, DevOps, Data Scientist, ML Engineer     | Modern Builder     |
+| `business`    | Sales, Marketing, Operations, Finance, HR, Project Manager | Business Impact    |
+| `creative`    | Designer, Writer, Brand Manager, Art Director              | Creative Portfolio |
+| `healthcare`  | Nurse, Physician, Clinical, Medical                        | Clinical Outcomes  |
+| `academic`    | Professor, Researcher, Postdoc, Fellow                     | Academic Research  |
+
+---
+
+## The Modern Builder Framework (Engineering)
+
+For **technical/engineering roles**, the system uses the "Modern Builder" framework:
 
 ### Five Core Capabilities
 
@@ -316,6 +359,40 @@ This system uses the "Modern Builder" framework to present engineering experienc
 | Increased velocity | Improved decision throughput              |
 | Team lead          | System leadership & mentoring             |
 | Built feature      | Constrained entropy, delivered durability |
+
+---
+
+## The Business Impact Framework (Non-Technical)
+
+For **business/non-technical roles**, the system uses the "Business Impact" framework:
+
+### Five Core Capabilities
+
+1. **Revenue & Growth Ownership** - Direct accountability for revenue targets or cost optimization
+2. **Stakeholder Influence** - Aligning cross-functional teams and driving decisions
+3. **Process & Operational Excellence** - Designing and improving scalable processes
+4. **Data-Driven Decision Making** - Using analytics to inform strategy
+5. **Team Leadership & Development** - Building and developing high-performing teams
+
+### Language Transformations
+
+| Generic          | Business Impact                                      |
+| ---------------- | ---------------------------------------------------- |
+| Managed project  | Drove initiative to completion, delivering $X impact |
+| Worked with team | Aligned X stakeholders to achieve [outcome]          |
+| Responsible for  | Owned [metric/outcome], achieving X% of target       |
+| Helped improve   | Implemented [change] resulting in X% improvement     |
+
+### Subcategory Adaptations
+
+The Business framework adapts metrics and language based on subcategory:
+
+- **Sales**: Quota attainment, deal size, win rate, pipeline velocity
+- **Marketing**: CAC, MQLs, engagement rates, ROAS, pipeline contribution
+- **Operations**: Cycle time, cost reduction, SLA compliance, efficiency gains
+- **Finance**: Budget variance, forecast accuracy, audit results, savings
+- **HR**: Time-to-hire, retention rate, eNPS, training completion
+- **Project Management**: On-time delivery, budget adherence, stakeholder satisfaction
 
 ## Vertical Targeting
 

@@ -2,6 +2,69 @@
 
 This directory contains AI instruction prompts for the Career Architect pipeline. Use these prompts with your AI assistant (Claude, GPT-4, etc.) to generate tailored job application materials.
 
+## Multi-Profile Architecture
+
+Career Architect supports **multiple career types** through role-specific prompt sets:
+
+```
+.prompts/
+├── core/                    # Shared prompts (all role types)
+│   ├── role_detector.md     # Auto-classifies job type from JD
+│   ├── power_language.md    # A+++ screening language + ATS optimization
+│   ├── quality_gates.md     # Self-checks + self-correction gates
+│   ├── setup.md             # Experience extraction (role-agnostic)
+│   ├── cover_letter.md      # Cover letter (adapts to role type)
+│   ├── follow_up.md         # Email templates
+│   ├── pdf_generator.md     # Build preparation
+│   └── application_questions.md
+│
+├── engineering/             # Technical/Engineering roles
+│   ├── manifesto_logic.md   # Modern Builder philosophy
+│   ├── analyser.md          # Technical gap analysis
+│   ├── tailor_resume.md     # Engineering resume generation
+│   └── interview_prep.md    # Technical interview prep
+│
+├── business/                # Sales, Marketing, Ops, Finance, HR, PM
+│   ├── business_capabilities.md  # Business Impact framework
+│   ├── analyser.md          # Business gap analysis
+│   ├── tailor_resume.md     # Business resume generation
+│   └── interview_prep.md    # Business interview prep
+│
+├── creative/                # Design, Writing, Brand
+│   ├── creative_capabilities.md  # Creative Portfolio framework
+│   ├── analyser.md          # Creative gap analysis
+│   ├── tailor_resume.md     # Creative resume generation
+│   └── interview_prep.md    # Portfolio + creative interview prep
+│
+├── healthcare/              # Clinical roles
+│   ├── clinical_outcomes.md # Clinical Outcomes framework
+│   ├── analyser.md          # Healthcare gap analysis
+│   ├── tailor_resume.md     # Healthcare resume generation
+│   └── interview_prep.md    # Clinical interview prep
+│
+├── academic/                # Research/teaching roles
+│   ├── academic_research.md # Academic Research framework
+│   ├── analyser.md          # Academic gap analysis
+│   ├── tailor_resume.md     # Academic resume/CV generation
+│   └── interview_prep.md    # Research interview prep
+│
+└── [legacy prompts]         # Original prompts (for backward compatibility)
+```
+
+### Role Categories
+
+| Category      | Example Roles                                 | Capability Framework |
+| ------------- | --------------------------------------------- | -------------------- |
+| `engineering` | Software Engineer, DevOps, Data Scientist     | Modern Builder       |
+| `business`    | Sales, Marketing, Operations, Finance, HR, PM | Business Impact      |
+| `creative`    | Designer, Writer, Brand Manager               | Creative Portfolio   |
+| `healthcare`  | Nurse, Physician, Clinical roles              | Clinical Outcomes    |
+| `academic`    | Professor, Researcher, Postdoc                | Academic Research    |
+
+The pipeline **auto-detects** the role category from the job description and routes to the appropriate prompts.
+
+---
+
 ## First-Time Setup (Do This Once)
 
 Before using any prompts, you must add your source materials:
@@ -10,7 +73,7 @@ Before using any prompts, you must add your source materials:
 1. Edit identity.json          → Your contact info
 2. Add resumes to resumes/     → Copy-paste your existing resumes as .md files
 3. Add projects to projects/   → Document your key projects
-4. Run setup.md                → AI builds your master_experience.md
+4. Run core/setup.md           → AI builds your master_experience.md
 ```
 
 Then for each job application, just paste the job description!
@@ -19,28 +82,38 @@ Then for each job application, just paste the job description!
 
 ### Core Pipeline
 
-| Prompt                     | When to Use                              | Output                 |
-| -------------------------- | ---------------------------------------- | ---------------------- |
-| `setup.md`                 | **First!** After adding resumes/projects | `master_experience.md` |
-| `main_orchestrator.md`     | For each new job application             | Full pipeline          |
-| `analyser.md`              | Gap analysis before tailoring            | Strategic Match Report |
-| `tailor_resume.md`         | Generate targeted resume                 | `resume.md`            |
-| `cover_letter.md`          | Generate cover letter                    | `cover_letter.md`      |
-| `application_questions.md` | Answer extra questions                   | `extra_questions.md`   |
-| `pdf_generator.md`         | Prepare for PDF build                    | Validated Markdown     |
+| Prompt                     | Location                      | When to Use                     | Output                 |
+| -------------------------- | ----------------------------- | ------------------------------- | ---------------------- |
+| `role_detector.md`         | `core/`                       | Auto-run by orchestrator        | Role classification    |
+| `setup.md`                 | `core/`                       | **First!** After adding resumes | `master_experience.md` |
+| `main_orchestrator.md`     | root                          | For each new job application    | Full pipeline          |
+| `analyser.md`              | `engineering/` or `business/` | Gap analysis (auto-routed)      | Strategic Match Report |
+| `tailor_resume.md`         | `engineering/` or `business/` | Generate resume (auto-routed)   | `resume.md`            |
+| `cover_letter.md`          | `core/`                       | Generate cover letter           | `cover_letter.md`      |
+| `application_questions.md` | `core/`                       | Answer extra questions          | `extra_questions.md`   |
+| `pdf_generator.md`         | `core/`                       | Prepare for PDF build           | Validated Markdown     |
+
+### Role-Specific Prompts
+
+| Role Category | Analyser                  | Resume                         | Interview Prep                  | Framework                           |
+| ------------- | ------------------------- | ------------------------------ | ------------------------------- | ----------------------------------- |
+| Engineering   | `engineering/analyser.md` | `engineering/tailor_resume.md` | `engineering/interview_prep.md` | `engineering/manifesto_logic.md`    |
+| Business      | `business/analyser.md`    | `business/tailor_resume.md`    | `business/interview_prep.md`    | `business/business_capabilities.md` |
+| Creative      | `creative/analyser.md`    | `creative/tailor_resume.md`    | `creative/interview_prep.md`    | `creative/creative_capabilities.md` |
+| Healthcare    | `healthcare/analyser.md`  | `healthcare/tailor_resume.md`  | `healthcare/interview_prep.md`  | `healthcare/clinical_outcomes.md`   |
+| Academic      | `academic/analyser.md`    | `academic/tailor_resume.md`    | `academic/interview_prep.md`    | `academic/academic_research.md`     |
 
 ### Supporting Prompts
 
-| Prompt                  | When to Use                        | Output                         |
-| ----------------------- | ---------------------------------- | ------------------------------ |
-| `style_guide.md`        | Reference for resume styles        | Style configuration            |
-| `interview_prep.md`     | Prepare for interviews             | Q&A coaching                   |
-| `mock_interview.md`     | Practice interview responses       | Feedback & coaching            |
-| `salary_negotiation.md` | Negotiate offers                   | Negotiation playbook           |
-| `linkedin_optimizer.md` | Optimize LinkedIn profile          | Profile content                |
-| `follow_up.md`          | Post-application communications    | Email templates                |
-| `gap_filler.md`         | Fill experience gaps               | Updated `master_experience.md` |
-| `manifesto_logic.md`    | Modern Builder language (optional) | Language patterns              |
+| Prompt                  | When to Use                   | Output                         |
+| ----------------------- | ----------------------------- | ------------------------------ |
+| `power_language.md`     | **A+++ Resume Quality**       | Domain-specific vocabulary     |
+| `quality_gates.md`      | Self-checks + self-correction | Gate report (PASS/FAIL)        |
+| `style_guide.md`        | Reference for resume styles   | Style configuration            |
+| `mock_interview.md`     | Practice interview responses  | Feedback & coaching            |
+| `salary_negotiation.md` | Negotiate offers              | Negotiation playbook           |
+| `linkedin_optimizer.md` | Optimize LinkedIn profile     | Profile content                |
+| `gap_filler.md`         | Fill experience gaps          | Updated `master_experience.md` |
 
 ### Configuration
 
@@ -53,6 +126,45 @@ Set your preferences in `source_materials/identity.json`:
   "tone": "professional"         // professional, conversational, formal
 }
 ```
+
+---
+
+## A+++ Resume Quality System
+
+The pipeline is optimized to produce resumes that pass every screening stage.
+
+### Power Language Guide (`core/power_language.md`)
+
+Provides domain-specific technical vocabulary for:
+
+| Domain          | Key Elements                                                    |
+| --------------- | --------------------------------------------------------------- |
+| **Engineering** | Architecture patterns, P95 latency, distributed systems, DevOps |
+| **Sales**       | ARR, MEDDIC, quota attainment, pipeline velocity                |
+| **Marketing**   | CAC, MQLs, ABM, attribution models, ROAS                        |
+| **Operations**  | Cycle time, Six Sigma, SLA compliance, process mapping          |
+| **Finance**     | Variance analysis, forecast accuracy, SOX, EBITDA               |
+| **HR**          | Time-to-hire, eNPS, retention rate, succession planning         |
+| **PM**          | On-time delivery, RACI, sprint velocity, risk mitigation        |
+
+### Quality Standards Enforced
+
+1. **XYZ Bullet Formula**: "Accomplished [X] measured by [Y], by doing [Z]"
+2. **Metrics in every bullet**: No exceptions
+3. **Power verbs only**: Banned words list (Helped, Assisted, Worked on, Participated)
+4. **ATS keyword optimization**: 3-tier extraction (Primary/Secondary/Tertiary)
+5. **Technical precision**: Domain-specific vocabulary required
+6. **Front-loaded impact**: Results first, methods second
+
+### Example Transformations
+
+| ❌ Before                   | ✅ After                                                                                         |
+| --------------------------- | ------------------------------------------------------------------------------------------------ |
+| Built microservices         | Architected event-driven microservices handling 2M daily transactions with 99.97% uptime         |
+| Managed marketing campaigns | Generated $2.4M in attributable pipeline at $38 CAC via integrated ABM across 6sense and Marketo |
+| Led sales team              | Directed team of 8 AEs to $12M ARR (118% of target), ranking #1 globally                         |
+
+---
 
 ## Workflow Diagram
 
