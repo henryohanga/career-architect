@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "career-architect": {
-      "command": "python",
-      "args": ["mcp_server.py"],
+      "command": "python3",
+      "args": ["${workspaceFolder}/mcp_server.py"],
       "description": "Career Architect — AI-powered job application pipeline. Tools: list_applications, create_application, get_pipeline_context, run_ats_score, build_resume, update_status, get_prompt."
     }
   }

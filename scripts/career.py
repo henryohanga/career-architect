@@ -472,7 +472,7 @@ def cmd_validate(args):
 
     # Check templates
     templates = ROOT / "templates"
-    for tmpl in ["style.tex", "cover_letter_style.tex"]:
+    for tmpl in ["style.tex", "minimal.tex", "creative.tex", "executive.tex", "cover_letter_style.tex"]:
         if (templates / tmpl).exists():
             log("✓", f"templates/{tmpl}: Exists", GREEN)
         else:

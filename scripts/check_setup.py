@@ -20,10 +20,18 @@ MASTER_EXP = ROOT / "source_materials" / "master_experience.md"
 RESUMES_DIR = ROOT / "source_materials" / "resumes"
 PROJECTS_DIR = ROOT / "source_materials" / "projects"
 
-PLACEHOLDER_VALUES = {
-    "Your Name", "your@email.com", "+254 712 345 678",
-    "Nairobi, Kenya", "", None,
-}
+def _is_placeholder(value) -> bool:
+    """Return True if the value looks like an unfilled placeholder."""
+    if value is None or str(value).strip() == "":
+        return True
+    v = str(value).strip().lower()
+    # Catch "Your Name", "your@email.com", "your phone", etc.
+    if v.startswith("your"):
+        return True
+    # Catch "example.com" addresses
+    if "example.com" in v or "placeholder" in v:
+        return True
+    return False
 
 
 def check() -> dict:
@@ -52,7 +60,7 @@ def check() -> dict:
         }
         for field, label in required.items():
             val = identity.get(field, "")
-            if not val or val in PLACEHOLDER_VALUES or val.startswith("Your") or val.startswith("your"):
+            if _is_placeholder(val):
                 result["identity"]["issues"].append(f"{label} ({field}) is not filled out")
 
     result["identity"]["ok"] = len(result["identity"]["issues"]) == 0

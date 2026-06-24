@@ -33,19 +33,8 @@
 % Colorful links
 \hypersetup{colorlinks=true, urlcolor=primary, linkcolor=primary}
 
-% Creative contact header with icons
-\newcommand{\contactline}[7]{
-    \begin{center}
-        {\fontsize{28}{34}\selectfont\textbf{\textcolor{dark}{#1}}} \\[10pt]
-        \textcolor{primary}{\faIcon{map-marker-alt}} #2 \quad
-        \textcolor{secondary}{\faIcon{phone}} #3 \quad
-        \textcolor{accent}{\faIcon{envelope}} \href{mailto:#4}{#4} \\[6pt]
-        \textcolor{primary}{\faIcon{linkedin}} \href{#5}{LinkedIn} \quad
-        \textcolor{secondary}{\faIcon{github}} \href{#6}{GitHub} \quad
-        \textcolor{accent}{\faIcon{globe}} \href{#7}{Portfolio}
-    \end{center}
-    \vspace{14pt}
-}
+% Contact header is injected dynamically by scripts/build_resume.py
+% via --include-before-body using identity.json values (only non-empty fields rendered).
 
 % Stylish bullet points
 \setlist[itemize]{leftmargin=0.15in, labelsep=0.5em, nosep, itemsep=4pt}

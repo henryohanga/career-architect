@@ -31,22 +31,8 @@
 % Professional link styling
 \hypersetup{colorlinks=true, urlcolor=navy, linkcolor=navy}
 
-% Executive contact header
-\newcommand{\contactline}[7]{
-    \begin{center}
-        {\fontsize{24}{30}\selectfont\textbf{\textsc{#1}}} \\[8pt]
-        \textcolor{charcoal}{\small
-            #2 \quad \textcolor{gold}{|} \quad
-            #3 \quad \textcolor{gold}{|} \quad
-            \href{mailto:#4}{#4}
-        } \\[4pt]
-        \textcolor{charcoal}{\small
-            \href{#5}{\faIcon{linkedin} LinkedIn} \quad \textcolor{gold}{|} \quad
-            \href{#6}{\faIcon{github} GitHub}
-        }
-    \end{center}
-    \vspace{10pt}
-}
+% Contact header is injected dynamically by scripts/build_resume.py
+% via --include-before-body using identity.json values (only non-empty fields rendered).
 
 % Refined bullet points
 \setlist[itemize]{leftmargin=0.18in, labelsep=0.5em, nosep, itemsep=3pt}
