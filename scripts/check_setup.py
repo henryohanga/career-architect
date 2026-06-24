@@ -20,6 +20,7 @@ MASTER_EXP = ROOT / "source_materials" / "master_experience.md"
 RESUMES_DIR = ROOT / "source_materials" / "resumes"
 PROJECTS_DIR = ROOT / "source_materials" / "projects"
 
+
 def _is_placeholder(value) -> bool:
     """Return True if the value looks like an unfilled placeholder."""
     if value is None or str(value).strip() == "":
