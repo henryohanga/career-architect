@@ -1,74 +1,42 @@
-# Career Architect 🏗️
+# Career Architect
 
-> **Paste a job description. Let AI do the rest.**
+> **Paste a job description. Get a tailored resume, cover letter, interview prep, and PDF — in one command.**
 
-An open-source, AI-powered job application pipeline. Works natively as a **Claude Code agent** (slash commands), an **MCP server** (Cursor, Windsurf, Claude Desktop), or a **headless CI pipeline** (GitHub Actions). Generates tailored resumes, cover letters, interview prep, and PDFs — all from your personal experience lake.
+Career Architect is an AI-powered job application pipeline you run from your own machine. It learns from your experience once, then generates high-quality, personalised application materials for every role you target — automatically ATS-scored and export-ready.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/henryohanga/career-architect)
 
-> ⭐ **If this saves you time on a job application, please star the repo** — it helps others find it.
+---
+
+## How it works
+
+```
+Your experience  ──▶  Experience lake  ──▶  Job description  ──▶  Application artifacts
+(resumes, projects)    (built once)          (paste any JD)         resume · cover letter
+                                                                     interview prep · PDF
+```
+
+1. **Setup once** — fill in your identity, drop in your existing resumes and project docs, run `/career:setup`. Career Architect reads everything and builds a rich, structured experience lake.
+2. **Apply to anything** — paste a job description and run `/career:tailor`. The pipeline detects the role type, runs gap analysis against your lake, writes tailored documents, scores ATS coverage, and exports PDF/DOCX.
+3. **Iterate fast** — every subsequent application takes seconds. The lake grows as your career does.
 
 ---
 
-## How It Works
+## Getting started
 
-```
-┌──────────────┐     ┌─────────────────────────────────┐     ┌───────────────┐
-│  1. SETUP    │────▶│       2. PASTE JOB DESC          │────▶│  3. BUILD PDF │
-├──────────────┤     ├─────────────────────────────────┤     ├───────────────┤
-│ Fill identity│     │ /career:tailor → full pipeline:  │     │ CI builds on  │
-│ Add resumes  │     │ • Strategic match report         │     │ every push,   │
-│ Build lake   │     │ • Tailored resume (ATS-scored)   │     │ or: make build│
-│ (once only)  │     │ • Cover letter                   │     │               │
-└──────────────┘     │ • Interview prep                 │     └───────────────┘
-                     │ • PDF/DOCX artifacts              │
-                     └─────────────────────────────────┘
-```
+### GitHub Codespaces — zero install
 
----
-
-## Quick Start
-
-### Option A — GitHub Codespaces (zero install, fastest)
-
-Click the badge above or:
+Everything pre-installed. Click, wait 60 seconds, run the setup command.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/henryohanga/career-architect)
-
-Python, Pandoc, and LaTeX are pre-installed. Just open the terminal and run `/career:setup`.
-
-### Option B — Claude Code (local)
-
-```bash
-git clone https://github.com/henryohanga/career-architect.git
-cd career-architect
-pip install -r requirements.txt
-```
-
-Open the folder in Claude Code, then run:
 
 ```
 /career:setup
 ```
 
-That's it. `/career:setup` walks you through everything interactively — identity, source materials, and building your experience lake. When it's done, you're ready:
-
-```
-/career:tailor   ← paste a job description here
-```
-
-### Option C — Docker (no LaTeX install needed)
-
-```bash
-git clone https://github.com/henryohanga/career-architect.git
-cd career-architect
-docker build -t career-architect .
-docker run -it -v $(pwd):/work career-architect python scripts/career.py status
-```
-
-### Option D — Cursor / Windsurf / Claude Desktop (MCP)
+### Claude Code — local
 
 ```bash
 git clone https://github.com/henryohanga/career-architect.git
@@ -76,54 +44,54 @@ cd career-architect
 pip install -r requirements.txt
 ```
 
-Open the folder in your editor. The `.mcp.json` file auto-registers the `career-architect` MCP server. Ask your AI:
+Open the folder in Claude Code, then:
 
 ```
-"Set up Career Architect for me — walk me through identity and source materials"
-"Create an application for Stripe - Senior Engineer. Here's the JD: ..."
-"Get the pipeline context and generate a tailored resume"
-"Build the PDF artifacts"
+/career:setup
 ```
 
-### Option E — OpenAI Codex / Agents SDK
+When setup finishes, paste any job description and run:
 
-See [AGENTS.md](AGENTS.md) for tool wiring and prompt patterns.
+```
+/career:tailor
+```
 
-### Option F — Headless / CI only
+### Docker — no LaTeX install
 
-Set up once locally with Claude Code (`/career:setup`), then push `resume.md` files — GitHub Actions auto-builds PDFs and posts ATS scores on every PR. No local LaTeX needed.
+```bash
+git clone https://github.com/henryohanga/career-architect.git
+cd career-architect
+docker build -t career-architect .
+docker run -it -v "$(pwd)":/work career-architect bash
+```
+
+Then run any `python scripts/` command or `make` target inside the container.
+
+### Cursor / Windsurf / Claude Desktop — MCP
+
+Clone the repo, install requirements, then open in your editor. The `.mcp.json` file auto-registers the MCP server. Ask your AI assistant:
+
+```
+"Set up Career Architect for me"
+"Apply to this role at Stripe: <paste JD>"
+"Build the PDF artifacts for my Stripe application"
+```
+
+See [AGENTS.md](AGENTS.md) for the full MCP tool reference and OpenAI Codex wiring.
+
+### CI only — GitHub Actions
+
+Set up once locally, then push. Every `resume.md` commit triggers a PDF build and ATS score comment on the PR — no local LaTeX required.
 
 ---
 
-## Agent Skills (Claude Code slash commands)
+## First-time setup
 
-All skills run a setup gate first and redirect to `/career:setup` if anything is missing.
+Run `/career:setup` — it walks you through each step interactively.
 
-| Command | What it does |
-|---|---|
-| `/career:setup` | **One-time onboarding** — identity, source materials, experience lake |
-| `/career:tailor` | Full pipeline from JD → resume + cover letter + artifacts |
-| `/career:analyze` | Analyse a JD and produce a strategic match report (no generation) |
-| `/career:interview-prep` | Tailored question bank + STAR story starters |
-| `/career:cover-letter` | Generate or regenerate a cover letter for an existing application |
-| `/career:ats-score` | Run ATS keyword scoring with pass/fail guidance |
-| `/career:salary` | Salary research + negotiation talking points |
-| `/career:rebuild-lake` | Refresh experience lake after adding new resumes or projects |
-| `/career:rebuild` | Regenerate PDF/DOCX artifacts from existing markdown (no content regen) |
-| `/career:follow-up` | Generate post-application or post-interview follow-up emails |
-| `/career:linkedin` | Optimise all LinkedIn profile sections for a target role |
-| `/career:mock-interview` | Live mock interview with per-answer coaching and feedback |
-| `/career:status` | Full application dashboard with AI-generated next actions |
+### 1. Identity
 
----
-
-## First-Time Setup (4 Steps)
-
-Run `/career:setup` — it handles all of this interactively. Here's what happens under the hood:
-
-### Step 1 — Identity
-
-Edit `source_materials/identity.json` with your real contact info:
+Edit `source_materials/identity.json` with your real details. Only `full_name`, `email`, `phone`, and `location` are required. LinkedIn, GitHub, and portfolio are optional — they appear in the PDF header only if provided.
 
 ```json
 {
@@ -133,11 +101,10 @@ Edit `source_materials/identity.json` with your real contact info:
   "location": "San Francisco, CA",
   "linkedin": "https://linkedin.com/in/janesmith",
   "github": "https://github.com/janesmith",
+  "portfolio": "",
   "preferences": {
-    "language": "en",
-    "resume_style": "modern_builder",
-    "tone": "professional",
-    "template": "default"
+    "template": "default",
+    "tone": "professional"
   },
   "logistics": {
     "salary_expectation": "150000",
@@ -149,208 +116,213 @@ Edit `source_materials/identity.json` with your real contact info:
 }
 ```
 
-### Step 2 — Source Materials
+### 2. Source materials
 
-Add your existing resumes and project docs to:
+Drop your existing resumes and project docs into:
 
 ```
-source_materials/resumes/
-├── 2024-google-resume.md      ← paste raw resume text here
-├── 2023-startup-resume.md
-└── general-resume.md
-
-source_materials/projects/
-├── payment-system.md          ← project details + metrics
-└── open-source-library.md
+source_materials/
+├── resumes/
+│   ├── google-2024.md         ← paste raw resume text, any format
+│   └── startup-2022.md
+└── projects/
+    ├── payment-system.md      ← describe what you built + metrics
+    └── ml-pipeline.md
 ```
 
-Just paste raw text — the AI extracts and structures everything. See the README files in each directory for the expected format.
+Markdown is preferred but plain text works too. The AI extracts structure, metrics, and achievements — don't worry about formatting.
 
-### Step 3 — Build the Experience Lake
+### 3. Build the experience lake
 
-The AI reads all your source materials and produces `source_materials/master_experience.md` — a comprehensive, metrics-rich knowledge base every future application draws from.
+`/career:setup` does this automatically. It reads everything in `source_materials/` and writes `source_materials/master_experience.md` — a structured, metrics-rich knowledge base that every future application draws from.
+
+Check status any time:
 
 ```bash
-# Via Claude Code:
-/career:setup    ← handles this automatically
-
-# Check status anytime:
-make validate
-# or:
-python scripts/check_setup.py
+python scripts/check_setup.py   # JSON output, exit 0 = ready
+make validate                   # Human-readable output
 ```
 
-### Step 4 — Apply
+### 4. Apply
 
 ```
-/career:tailor   ← paste any job description
+/career:tailor
 ```
 
-The pipeline auto-detects role type, runs gap analysis, generates documents, scores ATS coverage, and builds PDF/DOCX artifacts.
+Paste a job description when prompted. The pipeline runs end-to-end and produces everything in `applications/YYYY-MM-DD-company-role/`.
 
 ---
 
-## MCP Tools
+## Commands
 
-When connected as an MCP server, these tools are available to any AI hub:
+All commands run a setup gate and redirect to `/career:setup` if anything is missing.
+
+| Command | What it does |
+|---|---|
+| `/career:setup` | One-time onboarding — identity, source materials, experience lake |
+| `/career:tailor` | Full pipeline: JD → resume + cover letter + interview prep + PDF |
+| `/career:analyze` | Analyse a JD and produce a strategic match report, no generation |
+| `/career:interview-prep` | Tailored question bank and STAR story starters |
+| `/career:cover-letter` | Write or regenerate a cover letter for an existing application |
+| `/career:ats-score` | Run ATS keyword scoring — ≥70% strong, 50–69% acceptable, <50% revise |
+| `/career:salary` | Market salary research and negotiation talking points |
+| `/career:rebuild-lake` | Refresh the experience lake after adding new source materials |
+| `/career:rebuild` | Regenerate PDF/DOCX from existing markdown — no content changes |
+| `/career:follow-up` | Draft a post-application or post-interview follow-up email |
+| `/career:linkedin` | Rewrite every LinkedIn section optimised for a target role |
+| `/career:mock-interview` | Live mock interview — one question at a time, per-answer STAR feedback |
+| `/career:status` | Application dashboard with AI-generated next actions |
+
+---
+
+## MCP tools
+
+When connected as an MCP server, these tools are available to any compatible AI:
 
 | Tool | Description |
 |---|---|
 | `list_applications` | List all applications with status and document completeness |
 | `create_application` | Create a new application folder and save the job description |
-| `get_pipeline_context` | Return the orchestrator prompt + source material context for running the full pipeline |
+| `get_pipeline_context` | Return the orchestrator prompt and source material context |
 | `run_ats_score` | Run ATS keyword scoring on an application folder |
 | `build_resume` | Build PDF and DOCX artifacts from resume.md |
-| `update_status` | Update application status (draft → applied → interview → offer) |
-| `get_prompt` | Retrieve any prompt file by path (e.g. `core/cover_letter.md`) |
-
-**Manual MCP config** (if `.mcp.json` isn't picked up automatically):
-
-```json
-{
-  "mcpServers": {
-    "career-architect": {
-      "command": "python",
-      "args": ["/absolute/path/to/career-architect/mcp_server.py"]
-    }
-  }
-}
-```
+| `update_status` | Update application status: draft → applied → interview → offer |
+| `get_prompt` | Retrieve any prompt file by path |
 
 ---
 
-## GitHub Actions (CI/CD)
-
-Three workflows run automatically:
+## GitHub Actions
 
 | Workflow | Trigger | What it does |
 |---|---|---|
-| `build-artifacts` | Push to any `resume.md` / `cover_letter.md` | Installs LaTeX+Pandoc, picks the right template, builds PDF/DOCX, runs ATS check, commits artifacts back |
-| `ats-check` | PR touching `resume.md` | Posts ATS score comment (✅ ≥80% / ⚠️ 50–79% / ❌ <50%) on the PR |
-| `validate-setup` | Push to `source_materials/**` | Runs `check_setup.py` and surfaces gaps in the Actions log |
+| `build-artifacts` | Push to `resume.md` or `cover_letter.md` | Builds PDF/DOCX, runs ATS check, commits artifacts back |
+| `ats-check` | PR touching `resume.md` | Posts ATS score comment on the PR |
+| `validate-setup` | Push to `source_materials/**` | Runs `check_setup.py` and surfaces gaps |
 
 ---
 
-## Supported Role Categories
+## Role categories
 
-The pipeline auto-detects role type from the JD and routes to the right prompts:
+The pipeline auto-detects role type from the JD:
 
-| Category | Example Roles | Framework |
+| Category | Typical roles | Approach |
 |---|---|---|
-| `engineering` | Software Engineer, DevOps, Data, ML | Modern Builder |
-| `business` | Sales, Marketing, Operations, Finance, HR | Business Impact |
-| `creative` | Designer, Writer, Brand Manager | Creative Portfolio |
-| `healthcare` | Nurse, Physician, Clinical, Medical | Clinical Outcomes |
-| `academic` | Professor, Researcher, Postdoc | Academic Research |
-
----
+| `engineering` | Software Engineer, DevOps, ML, Data | Impact metrics, system scale, technical depth |
+| `business` | Sales, Marketing, Operations, Finance | Revenue, efficiency, stakeholder outcomes |
+| `creative` | Designer, Writer, Brand, Content | Portfolio framing, craft, audience impact |
+| `healthcare` | Nurse, Physician, Clinical, Allied Health | Patient outcomes, clinical accuracy, compliance |
+| `academic` | Professor, Researcher, Postdoc | Publications, grants, teaching, institutional fit |
 
 ## Templates
 
-| Template | Best For |
+| Template | Best for |
 |---|---|
-| `default` | Modern professional (all engineering/business roles) |
-| `minimal` | Conservative industries, healthcare, academic |
-| `creative` | Design roles, startups, bold styling |
-| `executive` | Director+, VP, C-level, senior leadership |
+| `default` | Engineering and business roles — modern, clean |
+| `minimal` | Healthcare, academic, conservative industries |
+| `creative` | Design and creative roles — bold, colourful |
+| `executive` | Director, VP, C-level — authoritative, understated |
+
+Set your preferred template in `identity.json → preferences.template`, or override per build:
+
+```bash
+python scripts/build_resume.py applications/<folder>/resume.md --template executive
+# or
+/career:rebuild stripe executive
+```
 
 ---
 
-## CLI Reference
+## CLI reference
 
 ```bash
 # Setup
-make setup                              # Check setup status
-make validate                           # Validate source materials
-make install                            # Install Python dependencies
-make check                              # Verify LaTeX + Pandoc are installed
+make install                                    # pip install -r requirements.txt
+make check                                      # verify LaTeX + Pandoc installed
+make validate                                   # validate source materials
+python scripts/check_setup.py                   # JSON status, exit 0 = ready
 
-# Building
-make build                              # Build most recent application
-make build-all                          # Build all applications
-make build APP=2025-01-09-stripe-eng    # Build specific application
-make ats                                # ATS score for most recent application
-
-# Scripts
+# Applications
+make build                                      # build most recent application
+make build APP=2025-01-09-stripe-eng            # build specific application
+make build-all                                  # build all applications
 python scripts/career.py new --company "Stripe" --role "Senior Engineer"
 python scripts/career.py list
 python scripts/career.py status
-python scripts/career.py validate
-python scripts/career.py ats
-python scripts/career.py export         # TXT + JSON Resume formats
-python scripts/career.py stats          # Application analytics
+python scripts/career.py stats
+
+# Scoring and export
+python scripts/ats_score.py applications/<folder>/
+python scripts/export_resume.py all <folder>    # TXT + JSON Resume
 
 # Web dashboard
-make dashboard                          # streamlit run app.py
+make dashboard                                  # streamlit run app.py
 ```
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
 career-architect/
-├── .claude/
-│   └── commands/career/     # Claude Code slash commands (/career:<name>)
-│       ├── setup.md         # /career:setup
-│       ├── tailor.md        # /career:tailor
-│       ├── analyze.md       # /career:analyze
-│       ├── interview-prep.md
-│       ├── cover-letter.md
-│       ├── ats-score.md
-│       ├── salary.md
-│       ├── rebuild-lake.md
-│       ├── rebuild.md       # /career:rebuild — regen PDFs only
-│       ├── follow-up.md
-│       ├── linkedin.md
-│       ├── mock-interview.md
-│       └── status.md
-├── .github/
-│   └── workflows/
-│       ├── build-artifacts.yml
-│       ├── ats-check.yml
-│       └── validate-setup.yml
-├── .prompts/
-│   ├── main_orchestrator.md # Pipeline controller
-│   ├── core/                # Shared prompts (all role types)
-│   └── engineering|business|creative|healthcare|academic/
-├── applications/            # Generated per-job folders
+├── source_materials/
+│   ├── identity.json            ← your contact info and preferences
+│   ├── master_experience.md     ← experience lake (built by /career:setup)
+│   ├── resumes/                 ← your historical resumes as .md files
+│   └── projects/                ← project case studies as .md files
+│
+├── applications/
 │   └── YYYY-MM-DD-company-role/
 │       ├── job_desc.md
 │       ├── resume.md
 │       ├── cover_letter.md
 │       ├── interview_prep.md
 │       ├── salary_brief.md
-│       └── *.pdf, *.docx
-├── source_materials/
-│   ├── identity.json        # Contact info + preferences (source of truth)
-│   ├── master_experience.md # Experience lake (built by /setup)
-│   ├── resumes/             # Your historical resumes as .md files
-│   └── projects/            # Project case studies as .md files
+│       └── resume.pdf / resume.docx
+│
+├── .claude/
+│   └── commands/career/         ← 13 slash commands (/career:<name>)
+│
+├── .prompts/
+│   ├── main_orchestrator.md     ← pipeline controller
+│   ├── core/                    ← shared prompts
+│   └── engineering|business|creative|healthcare|academic/
+│
 ├── scripts/
-│   ├── check_setup.py       # Setup validator (exit 0 = ready)
-│   ├── career.py            # Main CLI
-│   ├── build_resume.py      # PDF/DOCX builder
-│   ├── ats_score.py         # ATS keyword scorer
-│   └── ...
-├── templates/               # LaTeX templates
-├── mcp_server.py            # MCP server (JSON-RPC 2.0)
-├── .mcp.json                # Auto-registers MCP server in compatible editors
-├── CLAUDE.md                # Claude Code context
-├── AGENTS.md                # OpenAI Codex / Agents SDK instructions
-└── app.py                   # Streamlit web dashboard
+│   ├── career.py                ← main CLI
+│   ├── build_resume.py          ← PDF/DOCX builder (reads identity.json for header)
+│   ├── check_setup.py           ← setup validator (exit 0 = ready)
+│   ├── ats_score.py             ← ATS keyword scorer
+│   └── export_resume.py         ← TXT + JSON Resume export
+│
+├── templates/
+│   ├── style.tex                ← default template
+│   ├── minimal.tex
+│   ├── creative.tex
+│   ├── executive.tex
+│   └── cover_letter_style.tex
+│
+├── mcp_server.py                ← MCP server (JSON-RPC 2.0 over stdio)
+├── .mcp.json                    ← auto-registers server in compatible editors
+├── CLAUDE.md                    ← Claude Code session context
+├── AGENTS.md                    ← OpenAI Codex / Agents SDK reference
+├── TRACKER.md                   ← your personal application tracker
+└── app.py                       ← Streamlit web dashboard
 ```
 
 ---
 
-## Development
+## Contributing
+
+Bug reports and feature requests welcome — use the issue templates. PRs should target a feature branch, not `main` directly.
 
 ```bash
-make test       # Run unit tests (pytest)
-make lint       # Check Python syntax
+make test     # pytest
+make lint     # flake8
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
 
 ## License
 
@@ -358,4 +330,6 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-**Built for people who treat job applications as a system to be optimized.** 🎯
+*Built for people who treat job applications as a system, not a lottery.*
+
+> ⭐ If Career Architect saved you time on an application, a star helps others find it.
