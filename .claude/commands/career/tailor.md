@@ -19,6 +19,7 @@ Execute the full Career Architect pipeline from `.prompts/main_orchestrator.md`.
 3. Execute `.prompts/main_orchestrator.md` exactly — all steps, all quality gates.
 4. At **Step 1** (after the Strategic Match Report), pause and wait for the user to say "GO" before continuing to generation.
 5. Report the output folder path and ATS score when done.
+6. Add a row to `TRACKER.md` under **Active** with status `📤`, the ATS score, and the folder path. If the user hasn't submitted yet (still drafting), use `🟡`.
 
 ## Args
 The user may pass the JD inline as the skill argument, e.g. `/tailor <JD text or file path>`.

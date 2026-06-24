@@ -10,6 +10,7 @@ End-to-end job application pipeline. Paste a job description → get a tailored 
 - `applications/YYYY-MM-DD-company-role/` — generated output per application
 - `templates/` — LaTeX templates: default, minimal, creative, executive
 - `scripts/` — Python scripts: build_resume.py, ats_score.py, career.py, export_resume.py
+- `TRACKER.md` — user's personal application tracker (status, ATS scores, notes)
 
 ## Main pipeline (`.prompts/main_orchestrator.md`)
 The full pipeline lives in `.prompts/main_orchestrator.md`. When a user says "apply to this job" or pastes a JD, execute that orchestrator end-to-end.
