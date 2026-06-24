@@ -6,6 +6,7 @@
 \usepackage{titlesec}
 \usepackage[unicode]{hyperref}
 \usepackage{enumitem}
+\usepackage{fontawesome5}
 \usepackage{setspace}
 \usepackage{parskip}
 
@@ -22,15 +23,8 @@
 % Subtle link styling
 \hypersetup{colorlinks=true, urlcolor=black, linkcolor=black}
 
-% Simple contact header
-\newcommand{\contactline}[7]{
-    \begin{center}
-        \textbf{\LARGE #1} \\[4pt]
-        \small #2 \quad $\bullet$ \quad #3 \quad $\bullet$ \quad #4 \\[2pt]
-        #5 \quad $\bullet$ \quad #6
-    \end{center}
-    \vspace{8pt}
-}
+% Contact header is injected dynamically by scripts/build_resume.py
+% via --include-before-body using identity.json values.
 
 % Clean bullet points
 \setlist[itemize]{leftmargin=0.2in, labelsep=0.4em, nosep, itemsep=2pt}

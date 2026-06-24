@@ -1,3 +1,14 @@
+## Setup gate (run first, every time)
+
+Run `python scripts/check_setup.py` and parse the JSON output.
+
+- If exit code is non-zero or `ready` is false, surface the specific issues and tell the user:
+  > "Career Architect isn't fully set up yet. Run `/career:setup` to complete the one-time onboarding."
+
+Unlike other commands, do **not** stop here — continue to render the dashboard even if setup is incomplete, so the user can see exactly what's missing.
+
+---
+
 ## What to do
 
 Run `python scripts/career.py status` and `python scripts/check_setup.py`, then render a comprehensive dashboard.

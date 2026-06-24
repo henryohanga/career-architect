@@ -103,6 +103,9 @@ class TestCmdValidate:
         templates_dir = tmp_path / "templates"
         templates_dir.mkdir()
         (templates_dir / "style.tex").write_text("% LaTeX style")
+        (templates_dir / "minimal.tex").write_text("% Minimal style")
+        (templates_dir / "creative.tex").write_text("% Creative style")
+        (templates_dir / "executive.tex").write_text("% Executive style")
         (templates_dir / "cover_letter_style.tex").write_text("% Cover letter style")
 
         with mock.patch("career.ROOT", tmp_path), mock.patch(
@@ -152,6 +155,9 @@ class TestCmdValidate:
         templates_dir = tmp_path / "templates"
         templates_dir.mkdir()
         (templates_dir / "style.tex").write_text("% LaTeX style")
+        (templates_dir / "minimal.tex").write_text("% Minimal style")
+        (templates_dir / "creative.tex").write_text("% Creative style")
+        (templates_dir / "executive.tex").write_text("% Executive style")
         (templates_dir / "cover_letter_style.tex").write_text("% Cover letter style")
 
         with mock.patch("career.ROOT", tmp_path), mock.patch(

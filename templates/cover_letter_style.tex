@@ -19,25 +19,8 @@
 % Link styling
 \hypersetup{colorlinks=true, urlcolor=accentcolor}
 
-% Contact header similar to resume but appropriate for cover letters
-\newcommand{\letterheader}[7]{
-    \begin{center}
-        \textbf{\Large #1} \\ \vspace{6pt}
-        \small #2 \ $|$ \ #3 \ $|$ \ \href{mailto:#4}{#4} \\ \vspace{2pt}
-        \href{#5}{\faIcon{linkedin} LinkedIn} \ $|$ \ \href{#6}{\faIcon{github} GitHub} \ $|$ \ \href{#7}{\faIcon{globe} Portfolio}
-    \end{center}
-    \vspace{10pt}
-}
-
-% Alternative contact line command (same as resume template)
-\newcommand{\contactline}[7]{
-    \begin{center}
-        \textbf{\Large #1} \\ \vspace{6pt}
-        \small #2 \ $|$ \ #3 \ $|$ \ \href{mailto:#4}{#4} \\ \vspace{2pt}
-        \href{#5}{\faIcon{linkedin} LinkedIn} \ $|$ \ \href{#6}{\faIcon{github} GitHub} \ $|$ \ \href{#7}{\faIcon{globe} Portfolio}
-    \end{center}
-    \vspace{10pt}
-}
+% Note: cover letter header (sender name/contact) is written directly in cover_letter.md
+% as plain text above the salutation. No macro injection needed here.
 
 % Clean bullet points for cover letters
 \usepackage{enumitem}

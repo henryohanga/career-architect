@@ -25,15 +25,8 @@
 % Link styling
 \hypersetup{colorlinks=true, urlcolor=accentcolor}
 
-% Custom command for the contact line (7 parameters) - Improved readability
-\newcommand{\contactline}[7]{
-    \begin{center}
-        \textbf{\Huge #1} \\ \vspace{8pt}
-        \small #2 \ $|$ \ #3 \ $|$ \ \href{mailto:#4}{#4} \\ \vspace{2pt}
-        \href{#5}{\faIcon{linkedin} LinkedIn} \ $|$ \ \href{#6}{\faIcon{github} GitHub} \ $|$ \ \href{#7}{\faIcon{globe} Portfolio}
-    \end{center}
-    \vspace{12pt}
-}
+% Contact header is injected dynamically by scripts/build_resume.py
+% via --include-before-body using identity.json values (only non-empty fields rendered).
 
 % Bullet point styling - Clear and visible bullets for experience highlights
 \setlist[itemize]{leftmargin=0.15in, labelsep=0.5em, nosep, after=\vspace{4pt}, itemsep=3pt, topsep=2pt}

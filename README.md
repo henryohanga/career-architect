@@ -18,7 +18,7 @@ An open-source, AI-powered job application pipeline. Works natively as a **Claud
 ┌──────────────┐     ┌─────────────────────────────────┐     ┌───────────────┐
 │  1. SETUP    │────▶│       2. PASTE JOB DESC          │────▶│  3. BUILD PDF │
 ├──────────────┤     ├─────────────────────────────────┤     ├───────────────┤
-│ Fill identity│     │ /tailor → full pipeline runs:    │     │ CI builds on  │
+│ Fill identity│     │ /career:tailor → full pipeline:  │     │ CI builds on  │
 │ Add resumes  │     │ • Strategic match report         │     │ every push,   │
 │ Build lake   │     │ • Tailored resume (ATS-scored)   │     │ or: make build│
 │ (once only)  │     │ • Cover letter                   │     │               │
@@ -50,13 +50,13 @@ pip install -r requirements.txt
 Open the folder in Claude Code, then run:
 
 ```
-/setup
+/career:setup
 ```
 
-That's it. The `/career:setup` skill walks you through everything interactively — identity, source materials, and building your experience lake. When it's done, you're ready:
+That's it. `/career:setup` walks you through everything interactively — identity, source materials, and building your experience lake. When it's done, you're ready:
 
 ```
-/tailor   ← paste a job description here
+/career:tailor   ← paste a job description here
 ```
 
 ### Option C — Docker (no LaTeX install needed)
@@ -172,7 +172,7 @@ The AI reads all your source materials and produces `source_materials/master_exp
 
 ```bash
 # Via Claude Code:
-/setup    ← handles this automatically
+/career:setup    ← handles this automatically
 
 # Check status anytime:
 make validate
@@ -183,7 +183,7 @@ python scripts/check_setup.py
 ### Step 4 — Apply
 
 ```
-/tailor   ← paste any job description
+/career:tailor   ← paste any job description
 ```
 
 The pipeline auto-detects role type, runs gap analysis, generates documents, scores ATS coverage, and builds PDF/DOCX artifacts.
