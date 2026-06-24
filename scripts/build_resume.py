@@ -170,7 +170,10 @@ def _escape_latex(value: str) -> str:
 
 
 def build_contact_header_file(identity: dict) -> Optional[str]:
-    """Write a temp .tex file with the \\contactline call from identity.json.
+    """Write a temp .tex file with a dynamic contact header from identity.json.
+
+    Only renders fields that have real (non-placeholder) values — empty linkedin,
+    github, or portfolio fields are omitted entirely rather than shown as fake links.
 
     Returns the file path, or None if identity is missing / placeholder-only.
     The caller is responsible for deleting the file after pandoc runs.
@@ -181,28 +184,42 @@ def build_contact_header_file(identity: dict) -> Optional[str]:
     if name in PLACEHOLDERS:
         return None  # identity not filled in — skip header injection
 
-    def field(key: str, fallback: str = "") -> str:
-        val = identity.get(key) or fallback
-        return _escape_latex(val)
+    def tex(key: str) -> str:
+        return _escape_latex(identity.get(key) or "")
 
-    name_tex = field("full_name")
-    location_tex = field("location")
-    phone_tex = field("phone")
-    email_tex = field("email")
-    linkedin = identity.get("linkedin") or ""
-    github = identity.get("github") or ""
-    portfolio = identity.get("portfolio") or ""
+    name_tex = tex("full_name")
+    location_tex = tex("location")
+    phone_tex = tex("phone")
+    email_tex = tex("email")
+    linkedin = (identity.get("linkedin") or "").strip()
+    github = (identity.get("github") or "").strip()
+    portfolio = (identity.get("portfolio") or "").strip()
 
-    # Build the \contactline call — use raw URLs (not escaped) for href args
-    contact_line = (
-        f"\\contactline{{{name_tex}}}"
-        f"{{{location_tex}}}"
-        f"{{{phone_tex}}}"
-        f"{{{email_tex}}}"
-        f"{{{linkedin or 'https://linkedin.com'}}}"
-        f"{{{github or 'https://github.com'}}}"
-        f"{{{portfolio or 'https://example.com'}}}"
-    )
+    # Build contact line row 1: location | phone | email (omit empty fields)
+    info_parts = [p for p in [location_tex, phone_tex, email_tex] if p]
+    info_line = r" \ $|$ \ ".join(info_parts)
+
+    # Build link row: only include links that have real URLs
+    link_parts = []
+    if linkedin:
+        link_parts.append(rf"\href{{{linkedin}}}{{\faIcon{{linkedin}} LinkedIn}}")
+    if github:
+        link_parts.append(rf"\href{{{github}}}{{\faIcon{{github}} GitHub}}")
+    if portfolio:
+        link_parts.append(rf"\href{{{portfolio}}}{{\faIcon{{globe}} Portfolio}}")
+    link_line = r" \ $|$ \ ".join(link_parts)
+
+    lines = [
+        r"\begin{center}",
+        rf"    \textbf{{\Huge {name_tex}}} \\ \vspace{{8pt}}",
+    ]
+    if info_line:
+        lines.append(rf"    \small {info_line} \\")
+    if link_line:
+        lines.append(rf"    \vspace{{2pt}} {link_line}")
+    lines += [r"\end{center}", r"\vspace{12pt}"]
+
+    contact_line = "\n".join(lines)
 
     tmp = tempfile.NamedTemporaryFile(
         mode="w", suffix=".tex", delete=False, encoding="utf-8"
