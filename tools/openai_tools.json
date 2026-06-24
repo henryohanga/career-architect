@@ -1,0 +1,187 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "check_setup",
+      "description": "Validate that Career Architect is fully set up and ready to use. Always call this first before any pipeline action. Returns JSON with per-step status and a top-level 'ready' boolean.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "create_application",
+      "description": "Create a new application folder for a job and save the job description. Returns the folder path.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "description": "Company name, e.g. 'Stripe'"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role title, e.g. 'Senior Backend Engineer'"
+          },
+          "job_description": {
+            "type": "string",
+            "description": "Full text of the job description"
+          }
+        },
+        "required": ["company", "role", "job_description"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_pipeline_context",
+      "description": "Return the full orchestrator prompt, identity.json, and master_experience.md content needed to run the Career Architect pipeline. Feed this context to the LLM before asking it to generate documents.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "folder": {
+            "type": "string",
+            "description": "Application folder name, e.g. '2026-06-24-stripe-senior-backend-engineer'"
+          }
+        },
+        "required": ["folder"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "write_document",
+      "description": "Write a generated document (resume, cover letter, interview prep, etc.) to the application folder.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "folder": {
+            "type": "string",
+            "description": "Application folder name"
+          },
+          "filename": {
+            "type": "string",
+            "description": "File to write, e.g. 'resume.md', 'cover_letter.md', 'interview_prep.md'"
+          },
+          "content": {
+            "type": "string",
+            "description": "Full file content including YAML frontmatter"
+          }
+        },
+        "required": ["folder", "filename", "content"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "run_ats_score",
+      "description": "Run ATS keyword scoring on an application folder. Compares resume.md against job_desc.md. Returns a score percentage and list of missing keywords. Score ≥70% is strong, 50–69% acceptable, <50% is a blocker.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "folder": {
+            "type": "string",
+            "description": "Application folder name"
+          }
+        },
+        "required": ["folder"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "build_resume",
+      "description": "Build PDF, DOCX, and TXT artifacts from resume.md. Reads identity.json to inject the contact header. Only call this after ATS score is ≥50%.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "folder": {
+            "type": "string",
+            "description": "Application folder name"
+          },
+          "template": {
+            "type": "string",
+            "enum": ["default", "minimal", "creative", "executive"],
+            "description": "LaTeX template. default=engineering/business, minimal=healthcare/academic, creative=design, executive=Director+"
+          }
+        },
+        "required": ["folder"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "update_status",
+      "description": "Update the status of an application in TRACKER.md.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "folder": {
+            "type": "string",
+            "description": "Application folder name"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "applied", "screen", "interview", "offer", "accepted", "closed"],
+            "description": "New status"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional note to add to the tracker row"
+          }
+        },
+        "required": ["folder", "status"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "list_applications",
+      "description": "List all application folders with their status, document completeness, and ATS scores.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_prompt",
+      "description": "Retrieve the content of any prompt file from the .prompts/ directory. Use this to load role-specific prompts, quality gate definitions, or the main orchestrator.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Relative path within .prompts/, e.g. 'main_orchestrator.md', 'core/cover_letter.md', 'engineering/tailor_resume.md'"
+          }
+        },
+        "required": ["path"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "rebuild_experience_lake",
+      "description": "Rebuild master_experience.md from all source materials. Call this after the user adds new resumes or project docs to source_materials/.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  }
+]
