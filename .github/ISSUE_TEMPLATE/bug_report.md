@@ -1,35 +1,40 @@
 ---
-name: Bug Report
-about: Report a bug to help us improve
-title: "[BUG] "
+name: Bug report
+about: Something broken in the pipeline, a command, or artifact generation
 labels: bug
-assignees: ""
 ---
 
-## Description
+## What happened
 
-A clear description of what the bug is.
+<!-- Describe the bug clearly. What did you expect vs what actually occurred? -->
 
-## Steps to Reproduce
+## Steps to reproduce
 
-1. Run '...'
-2. With input '...'
-3. See error
-
-## Expected Behavior
-
-What you expected to happen.
-
-## Actual Behavior
-
-What actually happened.
+1.
+2.
+3.
 
 ## Environment
 
-- OS: [e.g., macOS 14, Ubuntu 22.04]
-- Python version: [e.g., 3.11]
-- AI Assistant used: [e.g., Claude, GPT-4, Cursor]
+- OS: <!-- macOS / Ubuntu / Windows -->
+- Python version: <!-- python --version -->
+- Pandoc version: <!-- pandoc --version -->
+- LaTeX: <!-- pdflatex --version | head -1 -->
+- Claude Code version: <!-- claude --version -->
+- Using: <!-- Claude Code / Cursor / Windsurf / Docker / GitHub Actions -->
 
-## Additional Context
+## Command or skill that failed
 
-Add any other context, screenshots, or error messages.
+<!-- e.g. /career:tailor, make build, python scripts/build_resume.py -->
+
+## Error output
+
+```
+paste error here
+```
+
+## Setup check output
+
+```
+python scripts/check_setup.py
+```

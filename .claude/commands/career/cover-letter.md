@@ -1,8 +1,3 @@
----
-name: cover-letter
-description: Generate a tailored cover letter for an existing application. Requires a job_desc.md and resume.md to already exist in the application folder. Use when the resume is done but the cover letter is missing, or to regenerate a cover letter with a different tone.
----
-
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

@@ -1,8 +1,3 @@
----
-name: interview-prep
-description: Generate a tailored interview preparation guide for a specific role — behavioural questions, technical questions, STAR story prompts, and company research hooks. Use when the user has an interview coming up or wants to prepare for a role.
----
-
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

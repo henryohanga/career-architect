@@ -1,8 +1,3 @@
----
-name: salary
-description: Generate salary research and negotiation talking points for a role. Use before an interview, after receiving an offer, or when filling in salary expectation fields on applications.
----
-
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

@@ -1,8 +1,3 @@
----
-name: tailor
-description: Run the full Career Architect pipeline. Paste a job description (or provide the path to one) and this skill tailors a resume, cover letter, and all submission artifacts end-to-end. Use when the user says "apply to this job", "tailor my resume", or pastes a job description.
----
-
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

@@ -1,8 +1,3 @@
----
-name: analyze
-description: Analyse a job description against the user's experience and produce a Strategic Match Report — gap analysis, keyword coverage, and role classification. Use before tailoring a resume, or when the user wants to evaluate a JD without committing to a full application.
----
-
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

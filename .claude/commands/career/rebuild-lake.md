@@ -1,8 +1,3 @@
----
-name: rebuild-lake
-description: Rebuild the experience lake (master_experience.md) from scratch using all current source materials. Use when the user has added new resumes or projects since initial setup, changed jobs, or wants to refresh their experience lake with updated content.
----
-
 Re-run the experience lake build step from `/career:setup` without touching identity or preferences.
 
 ## What to do

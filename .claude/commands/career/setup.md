@@ -1,8 +1,3 @@
----
-name: setup
-description: First-time onboarding for Career Architect. Guides the user through all required setup steps — filling out identity.json, adding source materials (resumes, project docs), and building the experience lake. Must be completed before any other skill will work. Use when the user is new, when setup validation fails, or when they explicitly ask to set up Career Architect.
----
-
 Run `python scripts/check_setup.py` to check current setup status, then guide the user through any incomplete steps.
 
 ## Setup Steps (execute in order, skip completed ones)

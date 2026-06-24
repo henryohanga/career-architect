@@ -1,8 +1,3 @@
----
-name: ats-score
-description: Run ATS keyword scoring on an application folder and get a pass/fail score with specific improvement suggestions. Use after generating a resume to check keyword coverage before submitting.
----
-
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.
