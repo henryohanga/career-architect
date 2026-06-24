@@ -42,7 +42,7 @@ Open the folder in Claude Code, then run:
 /setup
 ```
 
-That's it. The `/setup` skill walks you through everything interactively — identity, source materials, and building your experience lake. When it's done, you're ready:
+That's it. The `/career:setup` skill walks you through everything interactively — identity, source materials, and building your experience lake. When it's done, you're ready:
 
 ```
 /tailor   ← paste a job description here
@@ -71,30 +71,30 @@ See [AGENTS.md](AGENTS.md) for tool wiring and prompt patterns.
 
 ### Option D — Headless / CI only
 
-Set up once locally with Claude Code (`/setup`), then push `resume.md` files — GitHub Actions auto-builds PDFs and posts ATS scores on every PR. No local LaTeX needed.
+Set up once locally with Claude Code (`/career:setup`), then push `resume.md` files — GitHub Actions auto-builds PDFs and posts ATS scores on every PR. No local LaTeX needed.
 
 ---
 
 ## Agent Skills (Claude Code slash commands)
 
-All skills run a setup gate first and redirect to `/setup` if anything is missing.
+All skills run a setup gate first and redirect to `/career:setup` if anything is missing.
 
 | Command | What it does |
 |---|---|
-| `/setup` | **One-time onboarding** — identity, source materials, experience lake |
-| `/tailor` | Full pipeline from JD → resume + cover letter + artifacts |
-| `/analyze` | Analyse a JD and produce a strategic match report (no generation) |
-| `/interview-prep` | Tailored question bank + STAR story starters |
-| `/cover-letter` | Generate or regenerate a cover letter for an existing application |
-| `/ats-score` | Run ATS keyword scoring with pass/fail guidance |
-| `/salary` | Salary research + negotiation talking points |
-| `/rebuild-lake` | Refresh experience lake after adding new resumes or projects |
+| `/career:setup` | **One-time onboarding** — identity, source materials, experience lake |
+| `/career:tailor` | Full pipeline from JD → resume + cover letter + artifacts |
+| `/career:analyze` | Analyse a JD and produce a strategic match report (no generation) |
+| `/career:interview-prep` | Tailored question bank + STAR story starters |
+| `/career:cover-letter` | Generate or regenerate a cover letter for an existing application |
+| `/career:ats-score` | Run ATS keyword scoring with pass/fail guidance |
+| `/career:salary` | Salary research + negotiation talking points |
+| `/career:rebuild-lake` | Refresh experience lake after adding new resumes or projects |
 
 ---
 
 ## First-Time Setup (4 Steps)
 
-Run `/setup` — it handles all of this interactively. Here's what happens under the hood:
+Run `/career:setup` — it handles all of this interactively. Here's what happens under the hood:
 
 ### Step 1 — Identity
 

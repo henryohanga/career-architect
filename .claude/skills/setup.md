@@ -79,9 +79,9 @@ If `ready: true`:
 > "🎉 Career Architect is fully set up!
 >
 > You're ready to apply. Next steps:
-> - `/tailor` — paste a job description to generate a full application
-> - `/analyze` — evaluate a JD before committing to a full application
-> - `/interview-prep` — prepare for an upcoming interview"
+> - `/career:tailor` — paste a job description to generate a full application
+> - `/career:analyze` — evaluate a JD before committing to a full application
+> - `/career:interview-prep` — prepare for an upcoming interview"
 
 If any step still fails, show what remains and offer to fix it immediately.
 

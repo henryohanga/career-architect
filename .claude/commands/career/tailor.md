@@ -3,7 +3,7 @@
 Run `python scripts/check_setup.py` and parse the JSON output.
 
 - If exit code is non-zero or `ready` is false, **stop** and tell the user:
-  > "Career Architect isn't set up yet. Run `/setup` to complete the one-time onboarding (fills out your identity, adds your source materials, and builds your experience lake). It takes about 5 minutes."
+  > "Career Architect isn't set up yet. Run `/career:setup` to complete the one-time onboarding (fills out your identity, adds your source materials, and builds your experience lake). It takes about 5 minutes."
   Then list the specific issues from the JSON so they know exactly what's missing.
 
 Only proceed past this gate if `ready: true`.

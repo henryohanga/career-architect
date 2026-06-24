@@ -24,26 +24,26 @@ The full pipeline lives in `.prompts/main_orchestrator.md`. When a user says "ap
 
 ## First-time setup (required before any skill works)
 
-Run `/setup` — it walks through these 4 steps in order:
+Run `/career:setup` — it walks through these 4 steps in order:
 
 1. **Fill out identity** — edit `source_materials/identity.json` with your real name, email, phone, location, and job preferences
 2. **Add source materials** — paste or drop your existing resumes and project docs into `source_materials/resumes/` and `source_materials/projects/` as `.md` files
 3. **Build the experience lake** — Claude reads all source materials and creates `source_materials/master_experience.md`, the single source of truth every application draws from
-4. **Done** — from here, just paste a job description and run `/tailor`
+4. **Done** — from here, just paste a job description and run `/career:tailor`
 
-**Setup check:** `python scripts/check_setup.py` — returns JSON with per-step status and exits 0 only when fully ready. All skills run this automatically and redirect to `/setup` if not complete.
+**Setup check:** `python scripts/check_setup.py` — returns JSON with per-step status and exits 0 only when fully ready. All skills run this automatically and redirect to `/career:setup` if not complete.
 
 ## Skills available (slash commands)
 | Command | What it does |
 |---|---|
-| `/setup` | One-time onboarding — identity, source materials, experience lake |
-| `/tailor` | Full pipeline — paste JD, get all artifacts |
-| `/analyze` | Analyse JD and produce strategic match report |
-| `/interview-prep` | Generate interview question bank for a role |
-| `/cover-letter` | Generate cover letter only (resume must exist) |
-| `/ats-score` | Run ATS keyword scoring on an application folder |
-| `/salary` | Salary research and negotiation talking points |
-| `/rebuild-lake` | Refresh experience lake after adding new resumes or projects |
+| `/career:setup` | One-time onboarding — identity, source materials, experience lake |
+| `/career:tailor` | Full pipeline — paste JD, get all artifacts |
+| `/career:analyze` | Analyse JD and produce strategic match report |
+| `/career:interview-prep` | Generate interview question bank for a role |
+| `/career:cover-letter` | Generate cover letter only (resume must exist) |
+| `/career:ats-score` | Run ATS keyword scoring on an application folder |
+| `/career:salary` | Salary research and negotiation talking points |
+| `/career:rebuild-lake` | Refresh experience lake after adding new resumes or projects |
 
 ## Build commands
 ```bash

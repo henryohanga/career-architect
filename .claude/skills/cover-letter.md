@@ -8,7 +8,7 @@ description: Generate a tailored cover letter for an existing application. Requi
 Run `python scripts/check_setup.py` and parse the JSON output.
 
 - If exit code is non-zero or `ready` is false, **stop** and tell the user:
-  > "Career Architect isn't set up yet. Run `/setup` to complete the one-time onboarding. It takes about 5 minutes."
+  > "Career Architect isn't set up yet. Run `/career:setup` to complete the one-time onboarding. It takes about 5 minutes."
   List the specific issues from the JSON.
 
 Only proceed past this gate if `ready: true`.
