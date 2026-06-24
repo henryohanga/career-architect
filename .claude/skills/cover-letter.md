@@ -1,0 +1,23 @@
+---
+name: cover-letter
+description: Generate a tailored cover letter for an existing application. Requires a job_desc.md and resume.md to already exist in the application folder. Use when the resume is done but the cover letter is missing, or to regenerate a cover letter with a different tone.
+---
+
+Execute `.prompts/core/cover_letter.md` for an existing application.
+
+## What to do
+
+1. Identify the application folder:
+   - If args include a folder path or company/role, find the matching folder under `applications/`.
+   - If there is only one application folder, use it.
+   - If ambiguous, list available folders and ask the user to pick one.
+2. Verify `job_desc.md` and `resume.md` exist in the folder. If not, say which is missing and stop.
+3. Read `source_materials/identity.json` for tone and style preferences.
+4. Execute `.prompts/core/cover_letter.md`.
+5. Execute `.prompts/core/quality_gates.md` (Gate D) on the output.
+6. Save to `applications/<folder>/cover_letter.md`.
+7. Build PDF: `python scripts/build_resume.py applications/<folder>/cover_letter.md`
+
+## Args
+Folder name or company/role slug, e.g. `/cover-letter stripe-senior-engineer` or `/cover-letter applications/2026-06-24-stripe-senior-engineer/`.
+If no args, auto-detect the most recent application folder.
