@@ -3,6 +3,18 @@ name: salary
 description: Generate salary research and negotiation talking points for a role. Use before an interview, after receiving an offer, or when filling in salary expectation fields on applications.
 ---
 
+## Setup gate (run first, every time)
+
+Run `python scripts/check_setup.py` and parse the JSON output.
+
+- If exit code is non-zero or `ready` is false, **stop** and tell the user:
+  > "Career Architect isn't set up yet. Run `/setup` first — it only takes about 5 minutes."
+  List the specific issues from the JSON.
+
+Only proceed past this gate if `ready: true`.
+
+---
+
 Execute `.prompts/core/salary_negotiation.md` with context from the job and identity.
 
 ## What to do

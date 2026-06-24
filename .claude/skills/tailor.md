@@ -3,6 +3,18 @@ name: tailor
 description: Run the full Career Architect pipeline. Paste a job description (or provide the path to one) and this skill tailors a resume, cover letter, and all submission artifacts end-to-end. Use when the user says "apply to this job", "tailor my resume", or pastes a job description.
 ---
 
+## Setup gate (run first, every time)
+
+Run `python scripts/check_setup.py` and parse the JSON output.
+
+- If exit code is non-zero or `ready` is false, **stop** and tell the user:
+  > "Career Architect isn't set up yet. Run `/setup` to complete the one-time onboarding (fills out your identity, adds your source materials, and builds your experience lake). It takes about 5 minutes."
+  Then list the specific issues from the JSON so they know exactly what's missing.
+
+Only proceed past this gate if `ready: true`.
+
+---
+
 Execute the full Career Architect pipeline from `.prompts/main_orchestrator.md`.
 
 ## What to do
