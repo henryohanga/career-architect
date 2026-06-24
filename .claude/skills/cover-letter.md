@@ -3,6 +3,18 @@ name: cover-letter
 description: Generate a tailored cover letter for an existing application. Requires a job_desc.md and resume.md to already exist in the application folder. Use when the resume is done but the cover letter is missing, or to regenerate a cover letter with a different tone.
 ---
 
+## Setup gate (run first, every time)
+
+Run `python scripts/check_setup.py` and parse the JSON output.
+
+- If exit code is non-zero or `ready` is false, **stop** and tell the user:
+  > "Career Architect isn't set up yet. Run `/setup` to complete the one-time onboarding. It takes about 5 minutes."
+  List the specific issues from the JSON.
+
+Only proceed past this gate if `ready: true`.
+
+---
+
 Execute `.prompts/core/cover_letter.md` for an existing application.
 
 ## What to do

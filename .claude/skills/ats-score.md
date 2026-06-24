@@ -3,6 +3,18 @@ name: ats-score
 description: Run ATS keyword scoring on an application folder and get a pass/fail score with specific improvement suggestions. Use after generating a resume to check keyword coverage before submitting.
 ---
 
+## Setup gate (run first, every time)
+
+Run `python scripts/check_setup.py` and parse the JSON output.
+
+- If exit code is non-zero or `ready` is false, **stop** and tell the user:
+  > "Career Architect isn't set up yet. Run `/setup` to complete the one-time onboarding. It takes about 5 minutes."
+  List the specific issues from the JSON.
+
+Only proceed past this gate if `ready: true`.
+
+---
+
 Run ATS scoring via `scripts/ats_score.py` and interpret the results.
 
 ## What to do

@@ -1,0 +1,115 @@
+name: Build Resume Artifacts
+
+on:
+  push:
+    paths:
+      - "applications/**/resume.md"
+      - "applications/**/cover_letter.md"
+  workflow_dispatch:
+    inputs:
+      application:
+        description: "Application folder name (leave blank for most recent)"
+        required: false
+
+jobs:
+  build:
+    name: Build PDF & DOCX
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install LaTeX and Pandoc
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            pandoc \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra
+
+      - name: Detect changed application folders
+        id: detect
+        run: |
+          if [ -n "${{ github.event.inputs.application }}" ]; then
+            echo "folders=${{ github.event.inputs.application }}" >> $GITHUB_OUTPUT
+          else
+            # Find folders with changed resume.md or cover_letter.md
+            CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | \
+              grep -E '^applications/[^/]+/(resume|cover_letter)\.md$' | \
+              sed 's|applications/||;s|/.*||' | sort -u | tr '\n' ' ' || true)
+            if [ -z "$CHANGED" ]; then
+              # Fallback: most recent application folder
+              CHANGED=$(ls -t applications/ | grep -v '^\.' | head -1)
+            fi
+            echo "folders=$CHANGED" >> $GITHUB_OUTPUT
+          fi
+          echo "Building: $CHANGED"
+
+      - name: Build artifacts
+        run: |
+          for folder in ${{ steps.detect.outputs.folders }}; do
+            echo "=== Building $folder ==="
+            APP_DIR="applications/$folder"
+
+            if [ ! -d "$APP_DIR" ]; then
+              echo "⚠ Folder not found: $APP_DIR — skipping"
+              continue
+            fi
+
+            # Detect role category for template selection
+            TEMPLATE="default"
+            if [ -f "$APP_DIR/job_desc.md" ]; then
+              CATEGORY=$(grep -m1 '^role_category:' "$APP_DIR/job_desc.md" | awk '{print $2}' || true)
+              case "$CATEGORY" in
+                creative)   TEMPLATE="creative" ;;
+                healthcare) TEMPLATE="minimal" ;;
+                academic)   TEMPLATE="minimal" ;;
+                *)          TEMPLATE="default" ;;
+              esac
+            fi
+
+            # Build resume
+            if [ -f "$APP_DIR/resume.md" ]; then
+              echo "Building resume with template: $TEMPLATE"
+              python scripts/build_resume.py "$APP_DIR/resume.md" --template "$TEMPLATE" || true
+            fi
+
+            # Build cover letter
+            if [ -f "$APP_DIR/cover_letter.md" ]; then
+              echo "Building cover letter"
+              python scripts/build_resume.py "$APP_DIR/cover_letter.md" || true
+            fi
+
+            # Run ATS score and write to file
+            if [ -f "$APP_DIR/resume.md" ] && [ -f "$APP_DIR/job_desc.md" ]; then
+              echo "Running ATS score check"
+              python scripts/ats_score.py "$APP_DIR" > "$APP_DIR/ats_score.txt" 2>&1 || true
+              cat "$APP_DIR/ats_score.txt"
+            fi
+
+            echo "=== Done: $folder ==="
+          done
+
+      - name: Commit built artifacts
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add applications/
+          if git diff --cached --quiet; then
+            echo "No new artifacts to commit"
+          else
+            git commit -m "ci: build resume artifacts [skip ci]"
+            git push
+          fi

@@ -3,6 +3,18 @@ name: analyze
 description: Analyse a job description against the user's experience and produce a Strategic Match Report — gap analysis, keyword coverage, and role classification. Use before tailoring a resume, or when the user wants to evaluate a JD without committing to a full application.
 ---
 
+## Setup gate (run first, every time)
+
+Run `python scripts/check_setup.py` and parse the JSON output.
+
+- If exit code is non-zero or `ready` is false, **stop** and tell the user:
+  > "Career Architect isn't set up yet. Run `/setup` to complete the one-time onboarding. It takes about 5 minutes."
+  List the specific issues from the JSON.
+
+Only proceed past this gate if `ready: true`.
+
+---
+
 Perform Steps 0–1 of the Career Architect pipeline only (analysis, no generation).
 
 ## What to do
