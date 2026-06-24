@@ -8,6 +8,8 @@ Career Architect is an AI-powered job application pipeline you run from your own
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/henryohanga/career-architect)
 
+**Works with:** Claude Code · Gemini CLI · GitHub Copilot · Cursor · Windsurf · GPT-4o · LangChain · CrewAI · Aider · any LLM with file access
+
 ---
 
 ## How it works
@@ -77,7 +79,7 @@ Clone the repo, install requirements, then open in your editor. The `.mcp.json` 
 "Build the PDF artifacts for my Stripe application"
 ```
 
-See [AGENTS.md](AGENTS.md) for the full MCP tool reference and OpenAI Codex wiring.
+See [AGENTS.md](AGENTS.md) for the full integration guide — MCP, OpenAI function calling, LangChain, CrewAI, Aider, and raw file-based usage.
 
 ### CI only — GitHub Actions
 
@@ -301,10 +303,16 @@ career-architect/
 │   ├── executive.tex
 │   └── cover_letter_style.tex
 │
+├── tools/
+│   ├── openai_tools.json        ← OpenAI-compatible function calling schema
+│   └── langchain_tools.py       ← LangChain @tool wrappers (LangGraph, CrewAI)
+│
 ├── mcp_server.py                ← MCP server (JSON-RPC 2.0 over stdio)
-├── .mcp.json                    ← auto-registers server in compatible editors
+├── .mcp.json                    ← auto-registers server in MCP-compatible editors
+├── .aider.conf.yml              ← Aider context config
 ├── CLAUDE.md                    ← Claude Code session context
-├── AGENTS.md                    ← OpenAI Codex / Agents SDK reference
+├── GEMINI.md                    ← Gemini CLI session context
+├── AGENTS.md                    ← Universal agent integration guide
 ├── TRACKER.md                   ← your personal application tracker
 └── app.py                       ← Streamlit web dashboard
 ```

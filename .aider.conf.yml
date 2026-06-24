@@ -1,0 +1,8 @@
+# Aider configuration for Career Architect
+# These files are loaded as read-only context on every aider session.
+
+read:
+  - AGENTS.md
+  - source_materials/identity.json
+  - source_materials/master_experience.md
+  - .prompts/main_orchestrator.md
