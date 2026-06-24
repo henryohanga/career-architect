@@ -91,7 +91,7 @@ def check() -> dict:
         )
     else:
         content = MASTER_EXP.read_text()
-        lines = [l for l in content.splitlines() if l.strip()]
+        lines = [ln for ln in content.splitlines() if ln.strip()]
         if len(lines) < 20:
             result["experience_lake"]["issues"].append(
                 f"master_experience.md is too sparse ({len(lines)} non-empty lines). "
