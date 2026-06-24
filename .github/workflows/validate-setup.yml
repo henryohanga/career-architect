@@ -1,0 +1,52 @@
+name: Validate Setup
+
+on:
+  push:
+    paths:
+      - "source_materials/identity.json"
+      - "source_materials/master_experience.md"
+      - "source_materials/resumes/**"
+      - "source_materials/projects/**"
+
+jobs:
+  validate:
+    name: Source Materials Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run setup validator
+        run: |
+          python scripts/check_setup.py | tee /tmp/setup_result.json
+          EXIT_CODE=${PIPESTATUS[0]}
+
+          echo ""
+          echo "=== Setup Status ==="
+          python - <<'EOF'
+          import json, sys
+          with open('/tmp/setup_result.json') as f:
+              r = json.load(f)
+
+          if r['ready']:
+              print("✅ Career Architect is fully configured")
+          else:
+              print("⚠ Setup incomplete:")
+              for section in ['identity', 'source_materials', 'experience_lake']:
+                  for issue in r[section].get('issues', []):
+                      print(f"  • {issue}")
+
+          files = r['source_materials'].get('files', [])
+          if files:
+              print(f"\nSource files ({len(files)}):")
+              for f in files:
+                  print(f"  - {f}")
+          EOF
+
+          exit $EXIT_CODE
+        continue-on-error: true

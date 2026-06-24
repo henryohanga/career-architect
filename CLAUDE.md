@@ -43,6 +43,7 @@ Run `/setup` — it walks through these 4 steps in order:
 | `/cover-letter` | Generate cover letter only (resume must exist) |
 | `/ats-score` | Run ATS keyword scoring on an application folder |
 | `/salary` | Salary research and negotiation talking points |
+| `/rebuild-lake` | Refresh experience lake after adding new resumes or projects |
 
 ## Build commands
 ```bash

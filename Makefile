@@ -1,7 +1,7 @@
 # Career Architect - Makefile
 # ===========================
 
-.PHONY: help install check build build-all build-latest watch clean lint test ats version dashboard new
+.PHONY: help install check setup validate build build-all build-latest watch clean lint test ats version dashboard new
 
 # Default target
 help:
@@ -9,6 +9,8 @@ help:
 	@echo "=================================="
 	@echo ""
 	@echo "Setup:"
+	@echo "  make setup       Check Career Architect setup status"
+	@echo "  make validate    Validate source materials (identity, experience lake)"
 	@echo "  make install     Install Python dependencies"
 	@echo "  make check       Verify all required tools are installed"
 	@echo ""
@@ -34,6 +36,14 @@ help:
 	@echo ""
 
 # Setup
+setup:
+	@echo "🔍 Checking Career Architect setup..."
+	@python scripts/check_setup.py || true
+
+validate:
+	@echo "🔍 Validating source materials..."
+	python scripts/check_setup.py
+
 install:
 	@echo "📦 Installing Python dependencies..."
 	pip install -r requirements.txt
