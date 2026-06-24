@@ -9,6 +9,7 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from shutil import which
@@ -149,7 +150,75 @@ def check_dependencies() -> bool:
     return True
 
 
-def build_format(input_md: Path, out_dir: Path, fmt: str, style_file: Path) -> tuple:
+def _escape_latex(value: str) -> str:
+    """Escape special LaTeX characters in a string value."""
+    replacements = [
+        ("\\", r"\textbackslash{}"),
+        ("&", r"\&"),
+        ("%", r"\%"),
+        ("$", r"\$"),
+        ("#", r"\#"),
+        ("_", r"\_"),
+        ("{", r"\{"),
+        ("}", r"\}"),
+        ("~", r"\textasciitilde{}"),
+        ("^", r"\textasciicircum{}"),
+    ]
+    for char, escaped in replacements:
+        value = value.replace(char, escaped)
+    return value
+
+
+def build_contact_header_file(identity: dict) -> Optional[str]:
+    """Write a temp .tex file with the \\contactline call from identity.json.
+
+    Returns the file path, or None if identity is missing / placeholder-only.
+    The caller is responsible for deleting the file after pandoc runs.
+    """
+    PLACEHOLDERS = {"Your Name", "your@email.com", "+254 712 345 678", "Nairobi, Kenya", "", None}
+
+    name = identity.get("full_name", "")
+    if name in PLACEHOLDERS:
+        return None  # identity not filled in — skip header injection
+
+    def field(key: str, fallback: str = "") -> str:
+        val = identity.get(key) or fallback
+        return _escape_latex(val)
+
+    name_tex = field("full_name")
+    location_tex = field("location")
+    phone_tex = field("phone")
+    email_tex = field("email")
+    linkedin = identity.get("linkedin") or ""
+    github = identity.get("github") or ""
+    portfolio = identity.get("portfolio") or ""
+
+    # Build the \contactline call — use raw URLs (not escaped) for href args
+    contact_line = (
+        f"\\contactline{{{name_tex}}}"
+        f"{{{location_tex}}}"
+        f"{{{phone_tex}}}"
+        f"{{{email_tex}}}"
+        f"{{{linkedin or 'https://linkedin.com'}}}"
+        f"{{{github or 'https://github.com'}}}"
+        f"{{{portfolio or 'https://example.com'}}}"
+    )
+
+    tmp = tempfile.NamedTemporaryFile(
+        mode="w", suffix=".tex", delete=False, encoding="utf-8"
+    )
+    tmp.write(contact_line + "\n")
+    tmp.close()
+    return tmp.name
+
+
+def build_format(
+    input_md: Path,
+    out_dir: Path,
+    fmt: str,
+    style_file: Path,
+    contact_header_file: Optional[str] = None,
+) -> tuple:
     """Build a single format. Returns (format, success, output_path, error)."""
     base_name = input_md.stem
 
@@ -168,6 +237,8 @@ def build_format(input_md: Path, out_dir: Path, fmt: str, style_file: Path) -> t
             "--metadata=author=",
             "--metadata=date=",
         ]
+        if contact_header_file:
+            cmd += ["--include-before-body", contact_header_file]
     elif fmt == "docx":
         out_path = out_dir / f"{base_name}.docx"
         cmd = ["pandoc", str(input_md), "-o", str(out_path)]
@@ -230,16 +301,15 @@ def build_outputs(
 
     # Load and validate identity
     text = read_file(input_md)
-    if validate:
-        identity = load_identity()
-        if identity:
-            warnings = validate_contact_info(text, identity)
-            for warning in warnings:
-                log_warning(f"CONTACT VALIDATION: {warning}")
+    identity = load_identity()
+    if validate and identity:
+        for warning in validate_contact_info(text, identity):
+            log_warning(f"CONTACT VALIDATION: {warning}")
 
     # Determine style file
     base_name = input_md.stem
-    if "cover_letter" in base_name:
+    is_cover_letter = "cover_letter" in base_name
+    if is_cover_letter:
         style_file = COVER_LETTER_STYLE_TEX
     else:
         style_file = get_template(template)
@@ -249,21 +319,37 @@ def build_outputs(
         log_error(f"Style file not found: {style_file}")
         sys.exit(1)
 
+    # Build contact header from identity.json for resume PDFs
+    contact_header_file = None
+    if not is_cover_letter and identity:
+        contact_header_file = build_contact_header_file(identity)
+        if contact_header_file:
+            log_info(f"Injecting contact header for: {identity.get('full_name', '')}")
+        else:
+            log_warning("identity.json appears unfilled — PDF will have no name/contact header")
+
     log_info(f"Building {base_name} → {', '.join(formats)}")
 
     # Build formats (parallel or sequential)
     results = []
-    if parallel and len(formats) > 1:
-        with ThreadPoolExecutor(max_workers=3) as executor:
-            futures = {
-                executor.submit(build_format, input_md, out_dir, fmt, style_file): fmt
-                for fmt in formats
-            }
-            for future in as_completed(futures):
-                results.append(future.result())
-    else:
-        for fmt in formats:
-            results.append(build_format(input_md, out_dir, fmt, style_file))
+    try:
+        if parallel and len(formats) > 1:
+            with ThreadPoolExecutor(max_workers=3) as executor:
+                futures = {
+                    executor.submit(
+                        build_format, input_md, out_dir, fmt, style_file, contact_header_file
+                    ): fmt
+                    for fmt in formats
+                }
+                for future in as_completed(futures):
+                    results.append(future.result())
+        else:
+            for fmt in formats:
+                results.append(build_format(input_md, out_dir, fmt, style_file, contact_header_file))
+    finally:
+        # Always clean up the temp header file
+        if contact_header_file:
+            Path(contact_header_file).unlink(missing_ok=True)
 
     # Report results
     success_count = 0
