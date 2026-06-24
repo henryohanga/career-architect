@@ -7,6 +7,7 @@ All notable changes to Career Architect are documented here.
 ## [Unreleased]
 
 ### Added
+- `/career:rebuild` command — regenerate PDF/DOCX/TXT artifacts from existing markdown without re-running the full pipeline; supports template switching
 - `/career:follow-up` command — generate post-application and post-interview follow-up emails
 - `/career:linkedin` command — optimise all LinkedIn profile sections for a target role
 - `/career:mock-interview` command — live mock interview session with per-answer feedback
@@ -14,6 +15,9 @@ All notable changes to Career Architect are documented here.
 - `.devcontainer/` — GitHub Codespaces support; zero local install required
 - `Dockerfile` — single-container build with Python + Pandoc + LaTeX pre-installed
 - `.github/ISSUE_TEMPLATE/` — bug report and feature request templates
+
+### Fixed
+- PDF header missing: `build_resume.py` now injects `\contactline{...}` from `identity.json` via `--include-before-body`; previously the macro was defined but never called, so PDFs started at "Summary" with no name or contact information
 
 ---
 

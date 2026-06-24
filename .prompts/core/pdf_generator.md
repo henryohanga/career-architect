@@ -36,7 +36,7 @@ The LaTeX templates (`templates/style.tex`, etc.) define the visual styling. The
 
 ### Header Handling
 
-**The template automatically generates the header.** The `\contactline` macro is injected from `identity.json`:
+`scripts/build_resume.py` reads `source_materials/identity.json` and injects the contact header via pandoc's `--include-before-body`. The `\contactline` macro in the LaTeX template renders it:
 
 ```latex
 \contactline{NAME}{LOCATION}{PHONE}{EMAIL}{LINKEDIN}{GITHUB}{PORTFOLIO}
@@ -47,6 +47,8 @@ The LaTeX templates (`templates/style.tex`, etc.) define the visual styling. The
 - ❌ `# Name` (H1 header with person's name)
 - ❌ Contact information (email, phone, location, links)
 - ❌ Any header-like content before `## Summary`
+
+> **If the PDF starts at "Summary" with no name/contact header:** `identity.json` has placeholder values. Run `/career:setup` and fill in real contact details.
 
 ### Required Structure
 

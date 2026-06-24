@@ -109,6 +109,7 @@ All skills run a setup gate first and redirect to `/career:setup` if anything is
 | `/career:ats-score` | Run ATS keyword scoring with pass/fail guidance |
 | `/career:salary` | Salary research + negotiation talking points |
 | `/career:rebuild-lake` | Refresh experience lake after adding new resumes or projects |
+| `/career:rebuild` | Regenerate PDF/DOCX artifacts from existing markdown (no content regen) |
 | `/career:follow-up` | Generate post-application or post-interview follow-up emails |
 | `/career:linkedin` | Optimise all LinkedIn profile sections for a target role |
 | `/career:mock-interview` | Live mock interview with per-answer coaching and feedback |
@@ -290,15 +291,20 @@ make dashboard                          # streamlit run app.py
 ```
 career-architect/
 ├── .claude/
-│   └── skills/              # Claude Code slash commands
-│       ├── setup.md         # /setup  — onboarding
-│       ├── tailor.md        # /tailor — full pipeline
-│       ├── analyze.md       # /analyze
+│   └── commands/career/     # Claude Code slash commands (/career:<name>)
+│       ├── setup.md         # /career:setup
+│       ├── tailor.md        # /career:tailor
+│       ├── analyze.md       # /career:analyze
 │       ├── interview-prep.md
 │       ├── cover-letter.md
 │       ├── ats-score.md
 │       ├── salary.md
-│       └── rebuild-lake.md  # /rebuild-lake
+│       ├── rebuild-lake.md
+│       ├── rebuild.md       # /career:rebuild — regen PDFs only
+│       ├── follow-up.md
+│       ├── linkedin.md
+│       ├── mock-interview.md
+│       └── status.md
 ├── .github/
 │   └── workflows/
 │       ├── build-artifacts.yml

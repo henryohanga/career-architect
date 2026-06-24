@@ -44,6 +44,11 @@ Run `/career:setup` — it walks through these 4 steps in order:
 | `/career:ats-score` | Run ATS keyword scoring on an application folder |
 | `/career:salary` | Salary research and negotiation talking points |
 | `/career:rebuild-lake` | Refresh experience lake after adding new resumes or projects |
+| `/career:rebuild` | Regenerate PDF/DOCX artifacts from existing resume.md (no content regen) |
+| `/career:follow-up` | Generate post-application or post-interview follow-up emails |
+| `/career:linkedin` | Optimise all LinkedIn profile sections for a target role |
+| `/career:mock-interview` | Live mock interview session with per-answer coaching |
+| `/career:status` | Full application dashboard with AI-generated next actions |
 
 ## Build commands
 ```bash
