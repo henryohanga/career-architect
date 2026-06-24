@@ -1,0 +1,31 @@
+{
+  "name": "Career Architect",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "postCreateCommand": "pip install -r requirements.txt && echo '✅ Career Architect ready. Run /career:setup to get started.'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.pylint",
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "james-yu.latex-workshop"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "editor.formatOnSave": true,
+        "files.associations": {
+          "*.tex": "latex"
+        }
+      }
+    }
+  },
+  "remoteEnv": {
+    "PYTHONPATH": "/workspaces/career-architect"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  }
+}

@@ -1,23 +1,29 @@
 ---
-name: Feature Request
-about: Suggest an idea for Career Architect
-title: "[FEATURE] "
+name: Feature request
+about: Suggest a new command, prompt, workflow, or integration
 labels: enhancement
-assignees: ""
 ---
 
-## Problem Statement
+## What problem does this solve?
 
-What problem does this feature solve? Who benefits?
+<!-- Describe the job-to-be-done. What are you trying to accomplish that Career Architect doesn't support today? -->
 
-## Proposed Solution
+## Proposed solution
 
-Describe how you'd like this to work.
+<!-- What would the feature look like? A new /career: command? A new prompt? A GitHub Action? -->
 
-## Alternatives Considered
+## Which AI hub would this benefit?
 
-Any alternative solutions or features you've considered.
+- [ ] Claude Code (slash commands)
+- [ ] MCP editors (Cursor, Windsurf, Claude Desktop)
+- [ ] GitHub Actions (CI/headless)
+- [ ] OpenAI Codex / Agents SDK
+- [ ] All of the above
 
-## Additional Context
+## Alternatives you've considered
 
-Add any mockups, examples, or other context.
+<!-- Any workarounds you're using today? -->
+
+## Additional context
+
+<!-- Mockups, examples, related issues, or anything else -->

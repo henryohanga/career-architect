@@ -6,6 +6,9 @@ An open-source, AI-powered job application pipeline. Works natively as a **Claud
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/henryohanga/career-architect)
+
+> ⭐ **If this saves you time on a job application, please star the repo** — it helps others find it.
 
 ---
 
@@ -28,7 +31,15 @@ An open-source, AI-powered job application pipeline. Works natively as a **Claud
 
 ## Quick Start
 
-### Option A — Claude Code (recommended)
+### Option A — GitHub Codespaces (zero install, fastest)
+
+Click the badge above or:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/henryohanga/career-architect)
+
+Python, Pandoc, and LaTeX are pre-installed. Just open the terminal and run `/career:setup`.
+
+### Option B — Claude Code (local)
 
 ```bash
 git clone https://github.com/henryohanga/career-architect.git
@@ -48,7 +59,16 @@ That's it. The `/career:setup` skill walks you through everything interactively 
 /tailor   ← paste a job description here
 ```
 
-### Option B — Cursor / Windsurf / Claude Desktop (MCP)
+### Option C — Docker (no LaTeX install needed)
+
+```bash
+git clone https://github.com/henryohanga/career-architect.git
+cd career-architect
+docker build -t career-architect .
+docker run -it -v $(pwd):/work career-architect python scripts/career.py status
+```
+
+### Option D — Cursor / Windsurf / Claude Desktop (MCP)
 
 ```bash
 git clone https://github.com/henryohanga/career-architect.git
@@ -65,11 +85,11 @@ Open the folder in your editor. The `.mcp.json` file auto-registers the `career-
 "Build the PDF artifacts"
 ```
 
-### Option C — OpenAI Codex / Agents SDK
+### Option E — OpenAI Codex / Agents SDK
 
 See [AGENTS.md](AGENTS.md) for tool wiring and prompt patterns.
 
-### Option D — Headless / CI only
+### Option F — Headless / CI only
 
 Set up once locally with Claude Code (`/career:setup`), then push `resume.md` files — GitHub Actions auto-builds PDFs and posts ATS scores on every PR. No local LaTeX needed.
 
@@ -89,6 +109,10 @@ All skills run a setup gate first and redirect to `/career:setup` if anything is
 | `/career:ats-score` | Run ATS keyword scoring with pass/fail guidance |
 | `/career:salary` | Salary research + negotiation talking points |
 | `/career:rebuild-lake` | Refresh experience lake after adding new resumes or projects |
+| `/career:follow-up` | Generate post-application or post-interview follow-up emails |
+| `/career:linkedin` | Optimise all LinkedIn profile sections for a target role |
+| `/career:mock-interview` | Live mock interview with per-answer coaching and feedback |
+| `/career:status` | Full application dashboard with AI-generated next actions |
 
 ---
 

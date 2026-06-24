@@ -38,3 +38,6 @@ blogs/
 # applications/**/*.pdf
 # applications/**/*.docx
 # applications/**/*.txt
+
+# Claude Code local session state (personal, not for sharing)
+.claude/settings.local.json
