@@ -1,3 +1,8 @@
+---
+description: Generate a post-application or post-interview follow-up email
+argument-hint: [company/role, folder path, or context]
+---
+
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

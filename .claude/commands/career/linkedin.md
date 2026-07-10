@@ -1,3 +1,8 @@
+---
+description: Optimise all LinkedIn profile sections for a target role
+argument-hint: [target role or industry]
+---
+
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

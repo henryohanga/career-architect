@@ -29,10 +29,7 @@ jobs:
 
       - name: Check Python syntax
         run: |
-          python -m py_compile scripts/build_resume.py
-          python -m py_compile scripts/compile_all.py
-          python -m py_compile scripts/career.py
-          python -m py_compile scripts/ats_score.py
+          python -m py_compile scripts/*.py mcp_server.py app.py tools/langchain_tools.py
 
   test:
     runs-on: ubuntu-latest
@@ -72,13 +69,7 @@ jobs:
 
       - name: Validate prompts
         run: |
-          echo "Checking prompts..."
-          for f in .prompts/*.md; do
-            if [ -f "$f" ]; then
-              echo "  ✓ $f"
-            fi
-          done
-          echo "✅ All prompts valid"
+          python3 scripts/validate_prompts.py
 
       - name: Check for placeholder data
         run: |

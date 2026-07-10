@@ -1,3 +1,8 @@
+---
+description: Regenerate PDF/DOCX/TXT artifacts from an existing resume.md without regenerating content
+argument-hint: [folder name, company/role, or template]
+---
+
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

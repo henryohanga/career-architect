@@ -38,6 +38,9 @@ Run the relevant gate(s) for the artifact in scope:
 - **Gate C (Resume Quality + ATS)**: Validates `resume.md` against A+++ standards
 - **Gate D (Cover Letter Quality)**: Validates `cover_letter.md` is role-appropriate, non-duplicative, and fact-safe
 - **Gate E (PDF Readiness)**: Validates formatting constraints before LaTeX/Pandoc
+- **Gate F (Final Artifact Verification)**: Validates built artifacts exist, render, and contain correct info
+
+Gates E and F are also **code-enforced**: `python scripts/validate_resume.py applications/[folder]/` checks the no-H1, frontmatter, contact-info, and required-section rules mechanically, and `build_resume.py` refuses to build while BLOCK issues remain. Run it whenever Gate E is in scope.
 
 ---
 
@@ -322,6 +325,7 @@ Return a gate report in this exact format:
 - **Gate C (Resume Quality + ATS)**: PASS|FAIL|N/A
 - **Gate D (Cover Letter Quality)**: PASS|FAIL|N/A
 - **Gate E (PDF Readiness)**: PASS|FAIL|N/A
+- **Gate F (Final Artifact Verification)**: PASS|FAIL|N/A
 
 ## Blocking Issues (Must Fix)
 

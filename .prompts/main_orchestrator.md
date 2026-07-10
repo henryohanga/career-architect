@@ -28,7 +28,7 @@ This pipeline uses a **multi-profile prompt system** to support diverse career t
 │   ├── analyser.md          # Business gap analysis
 │   ├── tailor_resume.md     # Business resume
 │   └── interview_prep.md    # Business interviews
-└── [legacy prompts]         # Original prompts (deprecated)
+
 ```
 
 ---
@@ -265,7 +265,9 @@ python scripts/build_resume.py applications/[folder]/cover_letter.md
 python scripts/ats_score.py applications/[folder]/
 ```
 
-**ATS Score Gate**: If `ats_score.py` returns <50%, **STOP** and revise resume to add missing keywords.
+**Validator Gate**: Run `python scripts/validate_resume.py applications/[folder]/` first. Fix every BLOCK issue (missing frontmatter, H1 in body, contact info that contradicts `identity.json`, missing experience section) before building — the build script refuses to run otherwise.
+
+**ATS Score Gate**: If `ats_score.py` returns <50%, **STOP** and revise resume to add missing keywords (70%+ is the target for submission).
 
 ### Step 5: Final Artifact Verification (Gate F)
 
@@ -282,9 +284,9 @@ Verify:
 
 **STOP** if Gate F fails. Rebuild artifacts and rerun until **PASS**.
 
-### Step 6: Registry Update
+### Step 6: Tracker Update
 
-- Update the `README.md` dashboard table with the current date, company, role, and a status of "� Ready to Submit."
+- Add or update the application's row in `TRACKER.md` with the current date, company, role, ATS score, and a status of "🟢 Ready to Submit."
 - **Only mark as 🟢 Ready if Gate F PASSED.**
 
 ## 💎 Operational Constraints (Non-Negotiable)
@@ -330,8 +332,6 @@ date: [YYYY-MM-DD]
 ## Skills
 ```
 
-```
-
 ### Critical Rules
 
 - **NO H1 headers** (`#`) - The LaTeX template handles the name/header
@@ -339,4 +339,3 @@ date: [YYYY-MM-DD]
 - **Use H2** (`##`) for sections, **H3** (`###`) for subsections
 - **Blank line before lists** - Required for proper rendering
 - **Numbered lists on separate lines** - Each `1.` `2.` `3.` on its own line
-```

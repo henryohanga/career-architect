@@ -7,6 +7,7 @@ This module provides functionality to:
 - List version history
 - Restore previous versions
 """
+import difflib
 import hashlib
 import json
 import sys
@@ -160,23 +161,18 @@ class VersionTracker:
         lines1 = content1.splitlines()
         lines2 = content2.splitlines()
 
-        # Simple line-by-line diff
+        # Ordered diff so duplicate and moved lines are counted correctly
         added = []
         removed = []
         unchanged = 0
 
-        # Use set comparison for simple diff
-        set1 = set(lines1)
-        set2 = set(lines2)
-
-        for line in lines2:
-            if line not in set1 and line.strip():
-                added.append(line)
-        for line in lines1:
-            if line not in set2 and line.strip():
-                removed.append(line)
-
-        unchanged = len(set1 & set2)
+        matcher = difflib.SequenceMatcher(None, lines1, lines2)
+        for op, i1, i2, j1, j2 in matcher.get_opcodes():
+            if op == "equal":
+                unchanged += i2 - i1
+            else:
+                removed.extend(ln for ln in lines1[i1:i2] if ln.strip())
+                added.extend(ln for ln in lines2[j1:j2] if ln.strip())
 
         return {
             "v1": v1,
@@ -292,7 +288,10 @@ def main():
     parser.add_argument("--message", "-m", help="Version message (for save)")
     parser.add_argument("--v1", help="First version for diff")
     parser.add_argument("--v2", help="Second version for diff")
-    parser.add_argument("--version", "-v", help="Version ID (for restore/show)")
+    parser.add_argument(
+        "--version", "-v", "--id", dest="version",
+        help="Version ID (for restore/show)",
+    )
 
     args = parser.parse_args()
 

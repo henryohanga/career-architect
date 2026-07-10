@@ -9,6 +9,7 @@ Career Architect is designed to work with any LLM or agent framework, not just C
 | Integration | Entry point |
 |---|---|
 | Claude Code | `CLAUDE.md` + `.claude/commands/career/` |
+| OpenAI Codex CLI | `AGENTS.md` (this file, read natively — no config needed) |
 | Gemini CLI | `GEMINI.md` |
 | GitHub Copilot agent | `.github/copilot-instructions.md` |
 | MCP (Cursor, Windsurf, Claude Desktop, etc.) | `.mcp.json` + `mcp_server.py` |
@@ -30,6 +31,18 @@ These apply regardless of which LLM or framework you use.
 4. **YAML frontmatter required** on every generated document: `company`, `role`, `date`, `status`.
 5. **ATS gate.** If `ats_score.py` returns <50%, revise the resume before building PDF artifacts.
 6. **Role boundaries.** Use only the prompts from the detected `role_category` subdirectory. Never mix frameworks across categories.
+
+---
+
+## OpenAI Codex CLI
+
+Codex CLI reads `AGENTS.md` from the repo root automatically — no setup required. Just run:
+
+```bash
+codex "Apply to this job at Stripe: <JD>"
+```
+
+It will follow the universal rules and pipeline steps below directly, using the raw file-based interface (Codex CLI doesn't need MCP or a tool schema — it already has filesystem + shell access).
 
 ---
 

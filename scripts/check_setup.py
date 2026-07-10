@@ -21,15 +21,32 @@ RESUMES_DIR = ROOT / "source_materials" / "resumes"
 PROJECTS_DIR = ROOT / "source_materials" / "projects"
 
 
+PLACEHOLDER_VALUES = {
+    "your name",
+    "your full name",
+    "your@email.com",
+    "your.email@example.com",
+    "your phone",
+    "your location",
+    "your city",
+    "your city, country",
+    "city, country",
+    "+1 (555) 555-5555",
+    "555-555-5555",
+    "+254 712 345 678",  # example number shipped in the template identity.json
+}
+
+
 def _is_placeholder(value) -> bool:
     """Return True if the value looks like an unfilled placeholder."""
     if value is None or str(value).strip() == "":
         return True
     v = str(value).strip().lower()
-    # Catch "Your Name", "your@email.com", "your phone", etc.
-    if v.startswith("your"):
+    if v in PLACEHOLDER_VALUES:
         return True
-    # Catch "example.com" addresses
+    # Catch "your ..." template phrases without flagging real names like "Youri"
+    if v.startswith("your ") or v.startswith("your@") or v.startswith("your."):
+        return True
     if "example.com" in v or "placeholder" in v:
         return True
     return False
@@ -38,6 +55,7 @@ def _is_placeholder(value) -> bool:
 def check() -> dict:
     result = {
         "ready": False,
+        "demo_mode": (ROOT / ".demo-active").exists(),
         "identity": {"ok": False, "issues": []},
         "source_materials": {"ok": False, "issues": [], "files": []},
         "experience_lake": {"ok": False, "issues": []},
@@ -111,9 +129,6 @@ def check() -> dict:
                 "master_experience.md still contains template placeholders. "
                 "Run the experience lake setup with your real source materials."
             )
-        else:
-            result["experience_lake"]["ok"] = True
-
     result["experience_lake"]["ok"] = len(result["experience_lake"]["issues"]) == 0
 
     result["ready"] = (
