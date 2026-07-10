@@ -8,7 +8,7 @@ Career Architect is an AI-powered job application pipeline you run from your own
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/henryohanga/career-architect)
 
-**Works with:** Claude Code · Gemini CLI · GitHub Copilot · Cursor · Windsurf · GPT-4o · LangChain · CrewAI · Aider · any LLM with file access
+**Works with:** Claude Code · OpenAI Codex CLI · Gemini CLI · GitHub Copilot · Cursor · Windsurf · GPT-4o · LangChain · CrewAI · Aider · any LLM with file access
 
 ---
 

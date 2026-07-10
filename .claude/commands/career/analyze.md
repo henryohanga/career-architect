@@ -1,3 +1,8 @@
+---
+description: Analyse a job description against your experience lake and produce a strategic match report
+argument-hint: <JD text or file path>
+---
+
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.
@@ -17,11 +22,12 @@ Perform Steps 0–1 of the Career Architect pipeline only (analysis, no generati
 1. If the user provided a JD as text or file path, use it. Otherwise ask: "Please paste the job description."
 2. Read `source_materials/identity.json` for preferences.
 3. Read `source_materials/master_experience.md` for experience data.
-4. Execute `.prompts/core/role_detector.md` to classify the role.
-5. Execute the appropriate analyser from `.prompts/<role_category>/analyser.md`.
-6. Execute `.prompts/core/quality_gates.md` (Gate B).
-7. Output the Strategic Match Report to the console **and** save it to `applications/YYYY-MM-DD-company-role/strategic_match_report.md`.
-8. End with a clear YES/NO recommendation and top 3 gaps to address.
+4. Create `applications/YYYY-MM-DD-company-role/job_desc.md` from the JD with `company`, `role`, and `date` frontmatter (role_detector edits this file's frontmatter; it must exist first).
+5. Execute `.prompts/core/role_detector.md` to classify the role.
+6. Execute the appropriate analyser from `.prompts/<role_category>/analyser.md`.
+7. Execute `.prompts/core/quality_gates.md` (Gate B).
+8. Output the Strategic Match Report to the console **and** save it to the same `applications/YYYY-MM-DD-company-role/` folder as `strategic_match_report.md`.
+9. End with a clear YES/NO recommendation and top 3 gaps to address.
 
 Do **not** generate a resume or cover letter — stop after the report.
 

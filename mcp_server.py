@@ -263,6 +263,54 @@ def tool_update_status(folder: str, status: str) -> dict:
     return {"folder": folder, "status": status, "message": "Status updated."}
 
 
+def tool_check_setup() -> dict:
+    """Check whether Career Architect is set up (identity, source materials,
+    experience lake). Run this before any other tool."""
+    result = subprocess.run(
+        [sys.executable, "scripts/check_setup.py"],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    try:
+        status = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        status = {"raw_output": result.stdout}
+    status["exit_code"] = result.returncode
+    return status
+
+
+def tool_write_document(folder: str, filename: str, content: str) -> dict:
+    """Write a document (resume.md, cover_letter.md, ...) into an application
+    folder. Path-sandboxed: only .md/.txt files inside applications/.
+
+    Args:
+        folder: Application folder name (must already exist).
+        filename: Document filename, e.g. 'resume.md' or 'cover_letter.md'.
+        content: Full markdown content to write.
+    """
+    if Path(filename).suffix not in {".md", ".txt"}:
+        return {"error": "Only .md and .txt files can be written."}
+
+    app_dir = (APPLICATIONS_DIR / folder).resolve()
+    target = (app_dir / filename).resolve()
+    apps_root = APPLICATIONS_DIR.resolve()
+    if apps_root not in app_dir.parents and app_dir != apps_root:
+        return {"error": "Folder must be inside applications/."}
+    if target.parent != app_dir:
+        return {"error": "Filename must not contain path separators."}
+    if not app_dir.is_dir():
+        return {"error": f"Application folder not found: {folder}. Run create_application first."}
+
+    target.write_text(content, encoding="utf-8")
+    return {
+        "folder": folder,
+        "path": str(target),
+        "bytes_written": len(content.encode("utf-8")),
+        "message": f"Wrote {filename}.",
+    }
+
+
 def tool_get_prompt(prompt_path: str) -> dict:
     """Retrieve a specific prompt file by path (relative to .prompts/).
     Useful for AI hubs that want to load individual pipeline stages.

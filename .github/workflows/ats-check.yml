@@ -33,6 +33,17 @@ jobs:
           echo "folders=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed folders: $CHANGED"
 
+      - name: Validate resumes (guardrails)
+        run: |
+          FAILED=0
+          for folder in ${{ steps.detect.outputs.folders }}; do
+            APP_DIR="applications/$folder"
+            if [ -d "$APP_DIR" ]; then
+              python scripts/validate_resume.py "$APP_DIR" || FAILED=1
+            fi
+          done
+          exit $FAILED
+
       - name: Run ATS scoring
         id: ats
         run: |
@@ -43,18 +54,18 @@ jobs:
             if [ ! -f "$APP_DIR/resume.md" ]; then continue; fi
 
             RESULT=$(python scripts/ats_score.py "$APP_DIR" 2>&1 || true)
-            SCORE=$(echo "$RESULT" | grep -oP '\d+(?=%)' | head -1 || echo "N/A")
+            SCORE=$(python scripts/ats_score.py "$APP_DIR" --score-only 2>/dev/null || echo "N/A")
 
-            if [ "$SCORE" != "N/A" ] && [ "$SCORE" -lt "$LOWEST" ]; then
-              LOWEST=$SCORE
+            if [ "$SCORE" != "N/A" ]; then
+              LOWEST=$(python -c "print(min(float('$LOWEST'), float('$SCORE')))")
             fi
 
-            # Build status icon
+            # Build status icon (70 = strong, 50 = minimum; see scripts/ats_score.py)
             if [ "$SCORE" = "N/A" ]; then
               ICON="⚪"
-            elif [ "$SCORE" -ge 80 ]; then
+            elif python -c "exit(0 if float('$SCORE') >= 70 else 1)"; then
               ICON="✅"
-            elif [ "$SCORE" -ge 50 ]; then
+            elif python -c "exit(0 if float('$SCORE') >= 50 else 1)"; then
               ICON="⚠️"
             else
               ICON="❌"
@@ -83,13 +94,13 @@ jobs:
         with:
           script: |
             const report = `${{ steps.ats.outputs.report }}`;
-            const lowest = parseInt('${{ steps.ats.outputs.lowest }}') || 0;
+            const lowest = parseFloat('${{ steps.ats.outputs.lowest }}') || 0;
 
             let summary = '';
-            if (lowest >= 80) {
-              summary = '✅ All resumes pass ATS threshold (≥80%).';
+            if (lowest >= 70) {
+              summary = '✅ All resumes meet the strong ATS target (≥70%).';
             } else if (lowest >= 50) {
-              summary = '⚠️ Some resumes are below 80% — consider adding missing keywords before submitting.';
+              summary = '⚠️ Some resumes are below the 70% strong target — consider adding missing keywords before submitting.';
             } else {
               summary = '❌ One or more resumes are below the 50% minimum ATS threshold. Please add missing keywords.';
             }
@@ -101,7 +112,7 @@ jobs:
             ${report}
 
             ---
-            *Scores below 50% = ❌ needs work · 50–79% = ⚠️ acceptable · ≥80% = ✅ strong*
+            *Scores below 50% = ❌ needs work · 50–69% = ⚠️ acceptable · ≥70% = ✅ strong*
             `;
 
             // Delete previous ATS comments from this bot

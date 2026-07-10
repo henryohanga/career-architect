@@ -15,6 +15,9 @@ from pathlib import Path
 from shutil import which
 from typing import Optional
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from validate_resume import BLOCK, validate_file  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES_DIR = ROOT / "templates"
 APPLICATIONS_DIR = ROOT / "applications"
@@ -229,12 +232,36 @@ def build_contact_header_file(identity: dict) -> Optional[str]:
     return tmp.name
 
 
+def build_contact_header_markdown(identity: dict) -> Optional[str]:
+    """Markdown contact block for DOCX/TXT outputs (PDF uses the LaTeX header)."""
+    PLACEHOLDERS = {"Your Name", "your@email.com", "+254 712 345 678", "Nairobi, Kenya", "", None}
+    name = identity.get("full_name", "")
+    if name in PLACEHOLDERS:
+        return None
+
+    info_parts = [
+        identity.get(k, "") for k in ("location", "phone", "email") if identity.get(k)
+    ]
+    link_parts = [
+        identity.get(k, "").strip()
+        for k in ("linkedin", "github", "portfolio")
+        if (identity.get(k) or "").strip()
+    ]
+    lines = [f"**{name}**"]
+    if info_parts:
+        lines.append(" | ".join(info_parts))
+    if link_parts:
+        lines.append(" | ".join(link_parts))
+    return "\n\n".join(lines)
+
+
 def build_format(
     input_md: Path,
     out_dir: Path,
     fmt: str,
     style_file: Path,
     contact_header_file: Optional[str] = None,
+    plain_input_md: Optional[Path] = None,
 ) -> tuple:
     """Build a single format. Returns (format, success, output_path, error)."""
     base_name = input_md.stem
@@ -258,10 +285,10 @@ def build_format(
             cmd += ["--include-before-body", contact_header_file]
     elif fmt == "docx":
         out_path = out_dir / f"{base_name}.docx"
-        cmd = ["pandoc", str(input_md), "-o", str(out_path)]
+        cmd = ["pandoc", str(plain_input_md or input_md), "-o", str(out_path)]
     elif fmt == "txt":
         out_path = out_dir / f"{base_name}.txt"
-        cmd = ["pandoc", str(input_md), "-t", "plain", "-o", str(out_path)]
+        cmd = ["pandoc", str(plain_input_md or input_md), "-t", "plain", "-o", str(out_path)]
     else:
         return (fmt, False, None, f"Unknown format: {fmt}")
 
@@ -338,12 +365,24 @@ def build_outputs(
 
     # Build contact header from identity.json for resume PDFs
     contact_header_file = None
+    plain_input_md = None
     if not is_cover_letter and identity:
         contact_header_file = build_contact_header_file(identity)
         if contact_header_file:
             log_info(f"Injecting contact header for: {identity.get('full_name', '')}")
         else:
             log_warning("identity.json appears unfilled — PDF will have no name/contact header")
+
+        # DOCX/TXT get the contact block prepended to the markdown source
+        header_md = build_contact_header_markdown(identity)
+        if header_md and {"docx", "txt"} & set(formats):
+            tmp_md = tempfile.NamedTemporaryFile(
+                mode="w", suffix=".md", delete=False, encoding="utf-8",
+                prefix=f"{base_name}-",
+            )
+            tmp_md.write(header_md + "\n\n" + text)
+            tmp_md.close()
+            plain_input_md = Path(tmp_md.name)
 
     log_info(f"Building {base_name} → {', '.join(formats)}")
 
@@ -354,7 +393,8 @@ def build_outputs(
             with ThreadPoolExecutor(max_workers=3) as executor:
                 futures = {
                     executor.submit(
-                        build_format, input_md, out_dir, fmt, style_file, contact_header_file
+                        build_format, input_md, out_dir, fmt, style_file,
+                        contact_header_file, plain_input_md,
                     ): fmt
                     for fmt in formats
                 }
@@ -362,11 +402,16 @@ def build_outputs(
                     results.append(future.result())
         else:
             for fmt in formats:
-                results.append(build_format(input_md, out_dir, fmt, style_file, contact_header_file))
+                results.append(build_format(
+                    input_md, out_dir, fmt, style_file,
+                    contact_header_file, plain_input_md,
+                ))
     finally:
-        # Always clean up the temp header file
+        # Always clean up temp files
         if contact_header_file:
             Path(contact_header_file).unlink(missing_ok=True)
+        if plain_input_md:
+            plain_input_md.unlink(missing_ok=True)
 
     # Report results
     success_count = 0
@@ -413,6 +458,11 @@ Examples:
         help="Skip contact info validation against identity.json",
     )
     p.add_argument(
+        "--force",
+        action="store_true",
+        help="Build even if the document fails guardrail validation",
+    )
+    p.add_argument(
         "--sequential",
         action="store_true",
         help="Build formats sequentially instead of in parallel",
@@ -432,6 +482,23 @@ Examples:
 
     if not input_md.suffix.lower() == ".md":
         log_warning(f"Input file may not be Markdown: {input_md.suffix}")
+
+    # Guardrail validation (no H1, frontmatter, contact info, sections).
+    # BLOCK issues refuse the build unless --force is given.
+    issues = validate_file(input_md)
+    block_issues = [i for i in issues if i[0] == BLOCK]
+    for severity, code, message in issues:
+        if severity == BLOCK:
+            log_error(f"[{code}] {message}")
+        else:
+            log_warning(f"[{code}] {message}")
+    if block_issues and not args.force:
+        log_error(
+            f"{len(block_issues)} blocking issue(s) - fix them or rerun with --force"
+        )
+        sys.exit(1)
+    elif block_issues:
+        log_warning("Blocking issues overridden with --force")
 
     text = read_file(input_md)
     fm = parse_frontmatter(text)

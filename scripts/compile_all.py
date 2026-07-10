@@ -9,6 +9,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from validate_resume import BLOCK, validate_file  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[1]
+APPLICATIONS_DIR = ROOT / "applications"
+BUILD_SCRIPT = ROOT / "scripts" / "build_resume.py"
 
 # ANSI colors
 GREEN = "\033[92m"
@@ -121,7 +127,7 @@ def auto_build(
         formats: Output formats (comma-separated)
         doc_types: Document types to build
     """
-    base_dir = Path("applications")
+    base_dir = APPLICATIONS_DIR
 
     if not base_dir.exists():
         log("ℹ", "No applications directory found", BLUE)
@@ -153,10 +159,20 @@ def auto_build(
                 skipped += 1
                 continue
 
+            block_issues = [
+                i for i in validate_file(doc_path) if i[0] == BLOCK
+            ]
+            if block_issues:
+                log("✗", f" {doc_name} failed validation:", RED)
+                for _, code, message in block_issues:
+                    print(f"     [{code}] {message}")
+                failed += 1
+                continue
+
             log("🔨", f" Building {doc_name}...", BLUE)
             cmd = [
                 sys.executable,
-                "scripts/build_resume.py",
+                str(BUILD_SCRIPT),
                 str(doc_path),
                 "--formats",
                 formats,
@@ -186,7 +202,7 @@ def auto_build(
 
 def list_applications():
     """List all applications with their status."""
-    base_dir = Path("applications")
+    base_dir = APPLICATIONS_DIR
     if not base_dir.exists():
         log("ℹ", "No applications directory found", BLUE)
         return

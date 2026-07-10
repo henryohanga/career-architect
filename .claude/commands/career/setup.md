@@ -1,3 +1,8 @@
+---
+description: One-time onboarding — identity, source materials, experience lake
+argument-hint: [step number]
+---
+
 Run `python scripts/check_setup.py` to check current setup status, then guide the user through any incomplete steps.
 
 ## Setup Steps (execute in order, skip completed ones)

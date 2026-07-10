@@ -6,3 +6,6 @@ read:
   - source_materials/identity.json
   - source_materials/master_experience.md
   - .prompts/main_orchestrator.md
+  - .prompts/core/role_detector.md
+  - .prompts/core/quality_gates.md
+  - .prompts/core/style_guide.md

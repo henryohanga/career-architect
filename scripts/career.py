@@ -548,7 +548,9 @@ def main():
     ver_parser.add_argument("--message", "-m", help="Version message")
     ver_parser.add_argument("--v1", help="First version for diff")
     ver_parser.add_argument("--v2", help="Second version for diff")
-    ver_parser.add_argument("--id", help="Version ID for restore/show")
+    ver_parser.add_argument(
+        "--id", "--version", dest="id", help="Version ID for restore/show"
+    )
 
     # export command
     exp_parser = subparsers.add_parser("export", help="Export to ATS formats")

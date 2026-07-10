@@ -19,6 +19,13 @@ pip-log.txt
 *.out
 .last_build
 
+# Showcase gallery outputs are intentionally tracked
+!examples/showcase/**/*.pdf
+
+# Demo mode state (see scripts/demo_mode.py)
+source_materials/.backup/
+.demo-active
+
 # IDE
 .idea/
 .vscode/

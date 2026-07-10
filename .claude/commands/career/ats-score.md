@@ -1,3 +1,8 @@
+---
+description: Run ATS keyword scoring on an existing application folder
+argument-hint: [folder name or company/role]
+---
+
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

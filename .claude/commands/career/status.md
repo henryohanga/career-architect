@@ -1,3 +1,7 @@
+---
+description: Full application dashboard with AI-generated next actions
+---
+
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

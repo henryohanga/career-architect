@@ -1,3 +1,8 @@
+---
+description: Refresh the experience lake after adding new resumes or projects
+argument-hint: [file path or description of new material]
+---
+
 Re-run the experience lake build step from `/career:setup` without touching identity or preferences.
 
 ## What to do

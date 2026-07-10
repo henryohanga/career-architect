@@ -1,3 +1,8 @@
+---
+description: Run a live mock interview session with per-answer coaching
+argument-hint: [company/role or folder] [mode number]
+---
+
 ## Setup gate (run first, every time)
 
 Run `python scripts/check_setup.py` and parse the JSON output.

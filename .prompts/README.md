@@ -42,13 +42,11 @@ Career Architect supports **multiple career types** through role-specific prompt
 │   ├── tailor_resume.md     # Healthcare resume generation
 │   └── interview_prep.md    # Clinical interview prep
 │
-├── academic/                # Research/teaching roles
-│   ├── academic_research.md # Academic Research framework
-│   ├── analyser.md          # Academic gap analysis
-│   ├── tailor_resume.md     # Academic resume/CV generation
-│   └── interview_prep.md    # Research interview prep
-│
-└── [legacy prompts]         # Original prompts (for backward compatibility)
+└── academic/                # Research/teaching roles
+    ├── academic_research.md # Academic Research framework
+    ├── analyser.md          # Academic gap analysis
+    ├── tailor_resume.md     # Academic resume/CV generation
+    └── interview_prep.md    # Research interview prep
 ```
 
 ### Role Categories

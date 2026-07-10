@@ -21,7 +21,10 @@ IDENTITY_JSON = SOURCE_DIR / "identity.json"
 def load_identity() -> dict:
     """Load identity.json if it exists."""
     if IDENTITY_JSON.exists():
-        return json.loads(IDENTITY_JSON.read_text())
+        try:
+            return json.loads(IDENTITY_JSON.read_text())
+        except (json.JSONDecodeError, OSError) as e:
+            print(f"\033[93m⚠\033[0m Could not read identity.json: {e}", file=sys.stderr)
     return {}
 
 
@@ -182,26 +185,46 @@ def parse_experience(text: str) -> list:
 
 
 def parse_education(text: str) -> list:
-    """Parse education section."""
+    """Parse education section.
+
+    Expects the same convention as experience:
+        ### Institution
+        **Degree, Field** (2015 - 2019)
+    """
     education = []
     lines = text.strip().split("\n")
 
     current_edu = None
     for line in lines:
-        if line.startswith("###") or line.startswith("**"):
+        if line.startswith("###"):
             if current_edu:
                 education.append(current_edu)
             current_edu = {
-                "institution": strip_markdown(line.lstrip("#* ")),
+                "institution": strip_markdown(line.lstrip("# ")),
                 "area": "",
                 "studyType": "",
                 "startDate": "",
                 "endDate": "",
             }
         elif current_edu and line.strip():
-            # Try to extract degree info
-            if "degree" not in str(current_edu).lower():
-                current_edu["studyType"] = strip_markdown(line)
+            degree_match = re.search(r"\*\*([^*]+)\*\*", line)
+            if degree_match and not current_edu["studyType"]:
+                degree = degree_match.group(1)
+                if "," in degree:
+                    study_type, area = degree.split(",", 1)
+                    current_edu["studyType"] = study_type.strip()
+                    current_edu["area"] = area.strip()
+                else:
+                    current_edu["studyType"] = degree.strip()
+            date_match = re.search(r"\(([^)]+)\)", line)
+            if date_match and not current_edu["startDate"]:
+                dates = date_match.group(1)
+                if " - " in dates:
+                    start, end = dates.split(" - ", 1)
+                    current_edu["startDate"] = start.strip()
+                    current_edu["endDate"] = end.strip()
+                else:
+                    current_edu["endDate"] = dates.strip()
 
     if current_edu:
         education.append(current_edu)

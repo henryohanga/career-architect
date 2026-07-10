@@ -73,6 +73,8 @@ Analyze a job description and classify it into the appropriate role category to 
 
 **CRITICAL ACTION REQUIRED**: You MUST edit `applications/[folder]/job_desc.md` to add classification fields to its YAML frontmatter.
 
+**If `job_desc.md` does not exist yet** (analyze-only flows like `/career:analyze` that start from a pasted JD), create it first: write the pasted job description to `applications/[folder]/job_desc.md` with frontmatter containing `company`, `role`, and `date`, then continue with the steps below.
+
 ### Step-by-Step Instructions
 
 1. **Read** `applications/[folder]/job_desc.md`

@@ -44,6 +44,14 @@ validate:
 	@echo "🔍 Validating source materials..."
 	python scripts/check_setup.py
 
+validate-resume:
+ifndef APP
+	@echo "❌ Usage: make validate-resume APP=<application-folder>"
+	@exit 1
+endif
+	@echo "🔍 Validating application documents..."
+	python scripts/validate_resume.py "applications/$(APP)"
+
 install:
 	@echo "📦 Installing Python dependencies..."
 	pip install -r requirements.txt
@@ -112,10 +120,9 @@ clean:
 
 lint:
 	@echo "🔍 Checking Python code..."
-	@python3 -m py_compile scripts/build_resume.py && echo "✅ build_resume.py OK"
-	@python3 -m py_compile scripts/compile_all.py && echo "✅ compile_all.py OK"
-	@python3 -m py_compile scripts/career.py && echo "✅ career.py OK"
-	@python3 -m py_compile scripts/ats_score.py && echo "✅ ats_score.py OK"
+	@for f in scripts/*.py mcp_server.py app.py tools/langchain_tools.py; do \
+		python3 -m py_compile "$$f" && echo "✅ $$f OK" || exit 1; \
+	done
 
 test:
 	@echo "🧪 Running tests..."
@@ -143,5 +150,5 @@ endif
 	SLUG=$$(echo "$(COMPANY)-$(ROLE)" | tr '[:upper:]' '[:lower:]' | tr ' ' '-'); \
 	DIR="applications/$$DATE-$$SLUG"; \
 	mkdir -p "$$DIR"; \
-	echo "---\ncompany: $(COMPANY)\nrole: $(ROLE)\ndate: $$DATE\n---\n\n# Job Description\n\nPaste the job description here." > "$$DIR/job_desc.md"; \
+	printf '%s\n' "---" "company: $(COMPANY)" "role: $(ROLE)" "date: $$DATE" "---" "" "# Job Description" "" "Paste the job description here." > "$$DIR/job_desc.md"; \
 	echo "✅ Created $$DIR/job_desc.md"
